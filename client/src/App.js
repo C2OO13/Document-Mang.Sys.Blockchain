@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import downloadjs from 'downloadjs'
+import GoogleAuth from './components/GoogleAuth';
 
 const App = () => {
 
@@ -27,6 +28,11 @@ const App = () => {
 
   return (
     <div>
+      <div className = "ui secondary pointing menu">
+            <div className = "right menu">
+                <GoogleAuth />
+            </div>
+      </div>
       <h1 style={{textAlign: 'center'}}>Create Certificate</h1>
       <form className = "ui form" style={{width: '1000px', margin: '0 auto'}} onSubmit = {handleSubmit}>
         <label>Name:</label>
