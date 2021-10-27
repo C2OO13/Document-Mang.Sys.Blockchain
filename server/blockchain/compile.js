@@ -1,30 +1,26 @@
-const path = require('path');
-const solc = require('solc');
-const fs = require('fs-extra');
+import path from 'path';
+import solc from 'solc';
+import fs from 'fs-extra';
 
-const buildPath = path.resolve(process.cwd(), 'server', 'blockchain', 'build');
+const buildPath = path.resolve(process.cwd(), 'blockchain', 'build');
 // fs.removeSync(buildPath);
 
 const contracts = [
-    'MainContract.sol',
-    'EIP20Interface.sol',
+    'Certificate.sol',
 ];
 const paths = [];
 const sources = [];
 
 contracts.forEach((contract, index) => {
-    paths.push(path.resolve(process.cwd(), 'contracts', contract));
+    paths.push(path.resolve(process.cwd(), 'blockchain', 'contracts', contract));
     sources.push(fs.readFileSync(paths[index], 'utf8'));
 });
 
 const input = {
     language: 'Solidity',
     sources: {
-        'MainContract.sol': {
+        'Certificate.sol': {
             content: sources[0],
-        },
-        'EIP20Interface.sol': {
-            content: sources[1],
         },
     },
     settings: {
