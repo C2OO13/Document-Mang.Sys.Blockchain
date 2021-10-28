@@ -13,7 +13,6 @@ const birthSchema = mongoose.Schema({
     const minutes = userInput.slice(3);
     Save date time in type: Date
     But in second option you have to create Date object and set hours and minutes:
-    
     const date = new Date(dateString);
     date.setHours(hours, minutes); */
 });
