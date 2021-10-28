@@ -10,6 +10,7 @@ const CreateCertificate = props => {
         const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
     
         const page = pdfDoc.addPage()
+        // eslint-disable-next-line no-unused-vars
         const { width, height } = page.getSize()
         const fontSize = 30
         page.drawText(`Name: ${event.target[0].value}\n\nGuardian's Name: ${event.target[1].value}\n\nHospital: ${event.target[2].value}\n\nDate of Birth: ${event.target[3].value}\n\nTime of Birth: ${event.target[4].value}\n\nLocation: ${event.target[5].value}`, {

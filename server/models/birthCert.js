@@ -19,4 +19,4 @@ const birthSchema = mongoose.Schema({
 
 const BirthCert = mongoose.model('BirthCert', birthSchema);
 
-export default BithCert;
+export default BirthCert;
