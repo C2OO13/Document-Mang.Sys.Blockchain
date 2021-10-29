@@ -2,7 +2,7 @@ import path from 'path';
 import solc from 'solc';
 import fs from 'fs-extra';
 
-const buildPath = path.resolve(process.cwd(), 'blockchain', 'build');
+const buildPath = path.resolve(process.cwd(), 'build');
 // fs.removeSync(buildPath);
 
 const contracts = [
@@ -12,7 +12,7 @@ const paths = [];
 const sources = [];
 
 contracts.forEach((contract, index) => {
-    paths.push(path.resolve(process.cwd(), 'blockchain', 'contracts', contract));
+    paths.push(path.resolve(process.cwd(), 'contracts', contract));
     sources.push(fs.readFileSync(paths[index], 'utf8'));
 });
 

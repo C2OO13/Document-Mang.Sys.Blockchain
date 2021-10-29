@@ -9,11 +9,16 @@ export const getHash = (data) => {
     data.forEach(i => {
         input += i;
     });
+    try {
+        hash.update(input.toString());
+        const value = hash.digest('hex');
+        return value;
+    }
+    catch (e) {
+        console.log(e);
+        return e;
+    }
 
-    hash.update(input.toString());
-    const value = hash.digest('hex');
-
-    return value;
 }
 // Usage Example =>
 // import { getHash } from './getHash.js';

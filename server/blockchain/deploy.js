@@ -1,11 +1,14 @@
-import Web3, { providers } from 'web3';
-import { InstitutionCertificates } from './build/Certificate.json';
+import Web3 from 'web3';
+const { providers } = Web3;
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { InstitutionCertificates } = require("./build/Certificate.json");
 import { config } from 'dotenv';
-config({ path: './.env' });
+config({ path: '../.env' });
 import fs from 'fs-extra';
 import path from 'path';
 
-const addressPath = path.resolve(process.cwd(), 'blockchain', 'build');
+const addressPath = path.resolve(process.cwd(), 'build');
 // fs.removeSync(addressPath);
 
 async function main() {
@@ -34,7 +37,7 @@ async function main() {
         console.log(`Contract deployed at ${deployedContract.options.address}`);
 
         fs.ensureDirSync(addressPath);
-        fs.outputJSONSync(resolve(addressPath, 'address.json'), deployedContract.options.address);
+        fs.outputJSONSync(path.resolve(addressPath, 'address.json'), deployedContract.options.address);
     } catch (err) {
         console.log(err);
     }
