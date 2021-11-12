@@ -12,9 +12,11 @@ const addressPath = path.resolve(process.cwd(), 'build');
 // fs.removeSync(addressPath);
 
 async function main() {
-    const web3 = new Web3(new providers.HttpProvider(process.env.INFURA_KOVAN_URL));
+    // const web3 = new Web3(new providers.HttpProvider(process.env.INFURA_KOVAN_URL));
+    // const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
 
-    const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
+    const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+    const signer = web3.eth.accounts.privateKeyToAccount('0e7134e4ac7d6b8a3be0aec6aff3beddec4f9f6847e7eed4f9f4a9f2123ab091');
     web3.eth.accounts.wallet.add(signer);
 
     const abi = InstitutionCertificates.abi;

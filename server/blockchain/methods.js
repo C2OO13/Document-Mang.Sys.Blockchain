@@ -1,12 +1,22 @@
-import MainContract from "./MainContract";
+import MainContract from "./MainContract.js";
 import { config } from 'dotenv';
+import web3 from "./web3.js";
 config({ path: '../.env' });
-import Web3 from 'web3';
-const { providers } = Web3;
 
-const web3 = new Web3(new providers.HttpProvider(process.env.INFURA_KOVAN_URL));
-const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
-web3.eth.accounts.wallet.add(signer);
+export const getOwner = async () => {
+    try {
+        const data = await MainContract.methods
+            .contractOwner()
+            .call();
+
+        return JSON.stringify(data);
+
+    } catch (error) {
+        console.log(error);
+        return error.message;
+    }
+}
+
 
 export const getCertificate = async (id) => {
     try {
@@ -15,8 +25,7 @@ export const getCertificate = async (id) => {
             .getCertificate(id)
             .call();
 
-        console.log(data);
-        return data;
+        return JSON.stringify(data);
 
     } catch (error) {
         console.log(error);
@@ -26,10 +35,12 @@ export const getCertificate = async (id) => {
 
 export const setCertificate = async (id, acc, hash, desc) => {
     try {
+        const accounts = await web3.eth.getAccounts();
         await MainContract.methods
             .setCertificate(id, acc, hash, desc)
-            .send({ from: signer.address });
-        return "Success";
+            .send({ from: accounts[0], gas: "300000" });
+
+        return JSON.stringify('Success');
     } catch (error) {
         console.log(error);
         return error.message;
@@ -40,8 +51,8 @@ export const setActive = async (id, state) => {
     try {
         await MainContract.methods
             .setActive(id, state)
-            .send({ from: signer.address });
-        return 'Success';
+            .send({ from: accounts[0], gas: "300000" });
+        return JSON.stringify('Success');
     } catch (error) {
         console.log(error);
         return error.message;
@@ -50,13 +61,16 @@ export const setActive = async (id, state) => {
 
 export const newCertificate = async (acc, hash, desc) => {
     try {
+        const accounts = await web3.eth.getAccounts();
         await MainContract.methods
             .newCertificate(acc, hash, desc)
-            .send({ from: signer.address });
+            .send({ from: accounts[0], gas: "300000" });
+
         const id = await MainContract.methods
             .lastID()
             .call();
-        return id;
+
+        return JSON.stringify(id);
     } catch (error) {
         console.log(error);
         return error.message;
