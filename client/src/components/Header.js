@@ -1,8 +1,8 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import GoogleAuth from "./GoogleAuth"
+import GoogleLogin from "react-google-login"
 
-const Header = () => {
+const Header = (props) => {
   return (
     <div className="ui secondary pointing menu">
       <Link to="/" className="item">
@@ -18,7 +18,15 @@ const Header = () => {
         <Link to="/uploadTemplate" className="item">
           Upload Template
         </Link>
-        <GoogleAuth />
+        <GoogleLogin
+          clientId={
+            "922603664055-rgd2dan2rqmio280911p6n1s475h4jjp.apps.googleusercontent.com"
+          }
+          buttonText={"Sign In With Google"}
+          onSuccess={props.login}
+          onFailure={(err) => console.log("GoogleLogin :", err)}
+          cookiePolicy={"single_host_origin"}
+        />
       </div>
     </div>
   )

@@ -1,11 +1,26 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import downloadjs from "downloadjs"
 import axios from "../api"
 
 const CreateCertificate = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+
+  useEffect(() => {
+    const { data } = axios.get("/api/current_user")
+    if (data) {
+      setIsAuthenticated(true)
+      setCurrentUser(data)
+    }
+  }, [])
+
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (!isAuthenticated) {
+      alert("Please Sign In to proceed!")
+      return
+    }
     const pdfDoc = await PDFDocument.create()
     const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
 
@@ -49,7 +64,7 @@ const CreateCertificate = () => {
     formData.append("dateOfBirth", dateOfBirth)
     formData.append("timeOfBirth", timeOfBirth)
 
-    const { data } = await axios.post("/create_certificate", formData, {
+    const { data } = await axios.post("/api/create_certificate", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
