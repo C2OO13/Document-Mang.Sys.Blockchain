@@ -23,10 +23,22 @@ const App = () => {
     }
   }
 
+  const logout = async () => {
+    try {
+      const { data } = await axios.post("/logout", "")
+
+      if (data.status) {
+        //setIsAuthenticated(false)
+      }
+    } catch (err) {
+      // console.log('/logout :', err)
+    }
+  }
+
   return (
     <div className="ui container">
       <BrowserRouter>
-        <Header login={login} />
+        <Header login={login} logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route
