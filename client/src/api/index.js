@@ -1,7 +1,5 @@
-import axios from 'axios';
-const url = 'http://localhost:5000/';
+import axios from "axios"
 
-export const fetchPosts = () => axios.get(url);
-
-
-
+export default axios.create({
+  baseURL: "http://localhost:5000/",
+})
