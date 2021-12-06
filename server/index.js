@@ -18,10 +18,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(cors());
 
 app.use('/', birthCertRoutes);
 
-app.use(cors());
 
 const PORT = process.env.PORT;
 

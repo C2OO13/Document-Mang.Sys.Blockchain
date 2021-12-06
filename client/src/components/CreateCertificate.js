@@ -32,6 +32,13 @@ const CreateCertificate = () => {
         color: rgb(0, 0.53, 0.71),
       }
     )
+    let data = {};
+    data.name = userName;
+    data.guardian = guardianName;
+    data.hospital = hospitalName;
+    data.location = location;
+    data.tob = new Date(`${dateOfBirth}T${timeOfBirth}`);
+    data.dob = new Date(dateOfBirth);
 
     pdfDoc.setTitle(userName)
     pdfDoc.setAuthor(guardianName)
@@ -39,22 +46,11 @@ const CreateCertificate = () => {
     pdfDoc.setProducer(location)
     pdfDoc.setCreationDate(new Date(dateOfBirth))
     pdfDoc.setModificationDate(new Date(`${dateOfBirth}T${timeOfBirth}`))
-
+    pdfDoc.setKeywords([data]);
     const pdfBytes = await pdfDoc.save()
 
-    let formData = new FormData()
-    formData.append("userName", userName)
-    formData.append("guardianName", guardianName)
-    formData.append("hospitalName", hospitalName)
-    formData.append("location", location)
-    formData.append("dateOfBirth", dateOfBirth)
-    formData.append("timeOfBirth", timeOfBirth)
 
-    const { data } = await axios.post("/api/create_certificate", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    await axios.post("/api/create_certificate", data);
 
     downloadjs(pdfBytes, `${userName}_Certificate`, "application/pdf")
   }

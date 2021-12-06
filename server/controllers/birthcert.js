@@ -1,6 +1,7 @@
 import BirthCert from '../models/BirthCert.js';
 import { getCertificate, newCertificate } from '../blockchain/methods.js';
 import { getHash } from '../helper/getHash.js';
+import fillForm from '../helper/birthCertiTemplateFill.js';
 
 export const getBirthCertOne = async (req, res) => {
     const body = req.body;
@@ -30,8 +31,11 @@ export const getBirthCert = async (req, res) => {
 }
 export const createBirthCert = async (req, res) => {
     const body = req.body;
+    console.log("ASDDDDDDDDD");
+    console.log(body);
     var id;
     const hash = getHash(body);
+    // fillForm(body);
     try {
         id = JSON.parse(await newCertificate("0x1840A76Cd21f1c1aEC33CC6C0Ec2b42b6ed64de5", hash, body.name));
     }
@@ -43,6 +47,7 @@ export const createBirthCert = async (req, res) => {
     const newBirthCert = new BirthCert(body);
     try {
         newBirthCert.save();
+        // fillForm(body);
         //creti download
         //call pdf genreate and download
         res.status(201).json(newBirthCert);
