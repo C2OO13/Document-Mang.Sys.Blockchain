@@ -2,6 +2,8 @@ import MainContract from "./MainContract.js";
 import { config } from 'dotenv';
 import web3 from "./web3.js";
 config({ path: '../.env' });
+const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
+web3.eth.accounts.wallet.add(signer);
 
 export const getOwner = async () => {
     try {
@@ -38,7 +40,7 @@ export const setCertificate = async (id, acc, hash, desc) => {
         const accounts = await web3.eth.getAccounts();
         await MainContract.methods
             .setCertificate(id, acc, hash, desc)
-            .send({ from: accounts[0], gas: "300000" });
+            .send({ from: signer.address, gas: "300000" });
 
         return JSON.stringify('Success');
     } catch (error) {
@@ -64,7 +66,7 @@ export const newCertificate = async (acc, hash, desc) => {
         const accounts = await web3.eth.getAccounts();
         await MainContract.methods
             .newCertificate(acc, hash, desc)
-            .send({ from: accounts[0], gas: "300000" });
+            .send({ from: signer.address, gas: "300000" });
 
         const id = await MainContract.methods
             .lastID()
