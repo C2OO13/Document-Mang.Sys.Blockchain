@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 
 import axios from "../api"
 
-const UploadTemplate = () => {
+const VerifyCertificate = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
 
@@ -14,40 +14,40 @@ const UploadTemplate = () => {
     }
   }, [])
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (!isAuthenticated) {
       alert("Please Sign In to proceed!")
       return
     }
+    console.log(event)
+
+    const file = event.target[0].files[0]
+    if (file.type !== "application/pdf") {
+      alert("Please upload file in pdf format only!")
+      return
+    }
+
+    // read Metadata and verify if such certificate exists
+    // pdf url required to read meta data: https://jsfiddle.net/Hopding/eg8rfz3k/16/
   }
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>Upload Template</h1>
+      <h1 style={{ textAlign: "center" }}>Verify Certificate</h1>
       <form
         className="ui form"
         style={{ width: "1000px", margin: "0 auto" }}
         onSubmit={handleSubmit}
       >
-        <label>Name of Form:</label>
-        <input type="text" required />
+        <label>Upload Certificate:</label>
+        <input type="file" accept=".pdf" required />
         <br />
         <br />
-        <label>Fields(Enter all the required fields seperated by a ,):</label>
-        <input type="text" required />
-        <br />
-        <br />
-        <label>Form Template:</label>
-        <input type="file" required />
-        <br />
-        <br />
-        <br />
-
-        <input type="submit" className="ui button primary" value="Upload" />
+        <input type="submit" className="ui button primary" value="Verify" />
       </form>
     </div>
   )
 }
 
-export default UploadTemplate
+export default VerifyCertificate
