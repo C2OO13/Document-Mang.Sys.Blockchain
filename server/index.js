@@ -2,13 +2,13 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import express from 'express';
 import mongoose from "mongoose";
-import postRoutes from './routes/posts.js';
+import birthCertRoutes from './routes/birthcert.js';
 import dotenv from 'dotenv';
 
 const app = express();
 dotenv.config();
 
-app.use('/', postRoutes);
+app.use('/', birthCertRoutes);
 
 app.use(bodyParser.json({
     limit: "30mb",

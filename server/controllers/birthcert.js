@@ -3,6 +3,7 @@ import BirthCert from '../models/BirthCert.js';
 export const getBirthCert = async (req, res) => {
     try {
         const certi = await BirthCert.find();
+        //console.log(certi);
         res.status(200).json(certi);
     } catch (error) {
         console.log(error);
@@ -13,7 +14,10 @@ export const getBirthCert = async (req, res) => {
 }
 
 export const createBirthCert = async (req, res) => {
+    //console.log("hola");
+    //console.log(req);
     const body = req.body;
+    //console.log(body);
     const newBirthCert = new BirthCert(body); 
     try {
         newBirthCert.save();
