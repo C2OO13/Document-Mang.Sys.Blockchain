@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const certiSchema = mongoose.Schema({
+    name: String,
     file: File,
 });
 
