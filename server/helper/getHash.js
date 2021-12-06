@@ -6,9 +6,10 @@ export const getHash = (data) => {
 
     var input = '';
 
-    data.forEach(i => {
-        input += i;
-    });
+    for (var x in data) {
+        input += data[x];
+    }
+
     try {
         hash.update(input.toString());
         const value = hash.digest('hex');

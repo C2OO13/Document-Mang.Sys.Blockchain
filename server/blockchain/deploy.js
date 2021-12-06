@@ -10,20 +10,7 @@ import path from 'path';
 const addressPath = path.resolve(process.cwd(), 'build');
 // fs.removeSync(addressPath);
 
-async function main() {
-    // https://rpc.maticvigil.com/apps/1c81b149cafba4f154c6ced3cb69f862a8f53e63
-
-    const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://rpc-mumbai.maticvigil.com/ws/v1/1c81b149cafba4f154c6ced3cb69f862a8f53e63"));
-    // const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.maticvigil.com/apps/1c81b149cafba4f154c6ced3cb69f862a8f53e63"));
-    const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
-
-    // const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-    // const signer = web3.eth.accounts.privateKeyToAccount('6f3d0498fef33846f1f1fe3d488a08668b267c6385accaec6530ab4f8385d71c');
-    web3.eth.accounts.wallet.add(signer);
-    console.log(signer);
-    web3.eth.getBalance(signer.address).then((balance) => {
-        console.log("Balance:" + balance);
-    })
+async function deploy(web3, signer) {
 
     const abi = InstitutionCertificates.abi;
     const bytecode = InstitutionCertificates.evm.bytecode.object;
@@ -39,8 +26,7 @@ async function main() {
             })
             .once('transactionHash', txhash => {
                 console.log(`Mining deployment transaction ...`);
-                console.log(txhash);
-                // console.log(`https://kovan.etherscan.io/tx/${txhash}`);
+                console.log(`https://mumbai.polygonscan.com/tx/${txhash}`);
             });
 
         console.log(`Contract deployed at ${deployedContract.options.address}`);
@@ -51,6 +37,26 @@ async function main() {
     } catch (err) {
         console.log(err);
     }
+}
+
+
+async function main() {
+
+    const web3 = new Web3(new Web3.providers.WebsocketProvider(process.env.POLYGON_MUMBAI_URL));
+    const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
+
+    // Ganache - Localhost Setup
+    // const web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+    // const signer = web3.eth.accounts.privateKeyToAccount('6f3d0498fef33846f1f1fe3d488a08668b267c6385accaec6530ab4f8385d71c');
+
+    web3.eth.accounts.wallet.add(signer);
+
+    // web3.eth.getBalance(signer.address).then((balance) => {
+    //     console.log("Balance:" + balance);
+    // })
+
+    await deploy(web3, signer);
+
     process.exit();
 }
 main();

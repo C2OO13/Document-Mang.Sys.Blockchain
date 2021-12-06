@@ -8,8 +8,6 @@ import dotenv from 'dotenv';
 const app = express();
 dotenv.config();
 
-app.use('/', birthCertRoutes);
-
 app.use(bodyParser.json({
     limit: "30mb",
     extended: true
@@ -20,14 +18,17 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+
+app.use('/', birthCertRoutes);
+
 app.use(cors());
 
 const PORT = process.env.PORT;
 
 mongoose.connect(process.env.CONNECTION_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => app.listen(PORT, () => console.log(`Server connection successful on port: ${PORT}`)))
     .catch((error) => console.log(`Server connection failed with error! ${error.message}`));
 
