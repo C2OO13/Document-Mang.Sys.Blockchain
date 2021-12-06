@@ -7,6 +7,8 @@ const birthSchema = mongoose.Schema({
     dob: Date,
     tob: Date,
     location: String,
+    blockchain_id: Number,
+    hash: String,
     /*Save time as type: String
     const userInput = '05:20';
     const hours = userInput.slice(0, 2);

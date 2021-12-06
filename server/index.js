@@ -1,12 +1,12 @@
+import { config } from 'dotenv';
+config({ path: './.env' });
 import bodyParser from "body-parser";
 import cors from 'cors';
 import express from 'express';
 import mongoose from "mongoose";
 import birthCertRoutes from './routes/birthcert.js';
-import dotenv from 'dotenv';
 
 const app = express();
-dotenv.config();
 
 app.use(bodyParser.json({
     limit: "30mb",

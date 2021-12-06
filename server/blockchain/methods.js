@@ -1,7 +1,7 @@
-import MainContract from "./MainContract.js";
 import { config } from 'dotenv';
-import web3 from "./web3.js";
 config({ path: '../.env' });
+import MainContract from "./MainContract.js";
+import web3 from "./web3.js";
 
 // const accounts = await web3.eth.getAccounts();
 // const address = accounts[0];        
@@ -24,6 +24,23 @@ export const getOwner = async () => {
     }
 }
 
+export const newCertificate = async (acc, hash, desc) => {
+    try {
+
+        await MainContract.methods
+            .newCertificate(acc, hash, desc)
+            .send({ from: address, gas: "300000" });
+
+        const id = await MainContract.methods
+            .lastID()
+            .call();
+
+        return JSON.stringify(id);
+    } catch (error) {
+        console.log(error);
+        return error.message;
+    }
+}
 
 export const getCertificate = async (id) => {
     try {
@@ -60,24 +77,6 @@ export const setActive = async (id, state) => {
             .setActive(id, state)
             .send({ from: address, gas: "300000" });
         return JSON.stringify('Success');
-    } catch (error) {
-        console.log(error);
-        return error.message;
-    }
-}
-
-export const newCertificate = async (acc, hash, desc) => {
-    try {
-
-        await MainContract.methods
-            .newCertificate(acc, hash, desc)
-            .send({ from: address, gas: "300000" });
-
-        const id = await MainContract.methods
-            .lastID()
-            .call();
-
-        return JSON.stringify(id);
     } catch (error) {
         console.log(error);
         return error.message;

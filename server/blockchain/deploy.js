@@ -50,7 +50,6 @@ async function main() {
     // const signer = web3.eth.accounts.privateKeyToAccount('6f3d0498fef33846f1f1fe3d488a08668b267c6385accaec6530ab4f8385d71c');
 
     web3.eth.accounts.wallet.add(signer);
-
     // web3.eth.getBalance(signer.address).then((balance) => {
     //     console.log("Balance:" + balance);
     // })
