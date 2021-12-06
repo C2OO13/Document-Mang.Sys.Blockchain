@@ -33,12 +33,23 @@ const CreateCertificate = () => {
       }
     )
 
+    pdfDoc.setKeywords([
+      userName,
+      guardianName,
+      hospitalName,
+      dateOfBirth,
+      timeOfBirth,
+      location,
+    ])
+
     pdfDoc.setTitle(userName)
     pdfDoc.setAuthor(guardianName)
     pdfDoc.setSubject(hospitalName)
     pdfDoc.setProducer(location)
     pdfDoc.setCreationDate(new Date(dateOfBirth))
     pdfDoc.setModificationDate(new Date(`${dateOfBirth}T${timeOfBirth}`))
+
+    console.log(pdfDoc.getTitle())
 
     const pdfBytes = await pdfDoc.save()
 
