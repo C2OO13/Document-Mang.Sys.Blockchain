@@ -1,25 +1,9 @@
-import React, { useState, useEffect } from "react"
-
-import axios from "../api"
+import React from "react"
 
 const VerifyCertificate = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
-
-  useEffect(() => {
-    const { data } = axios.get("/api/current_user")
-    if (data) {
-      setIsAuthenticated(true)
-      setCurrentUser(data)
-    }
-  }, [])
-
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!isAuthenticated) {
-      alert("Please Sign In to proceed!")
-      return
-    }
+
     console.log(event)
 
     const file = event.target[0].files[0]

@@ -1,26 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import downloadjs from "downloadjs"
 import axios from "../api"
 
 const CreateCertificate = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
-
-  useEffect(() => {
-    const { data } = axios.get("/api/current_user")
-    if (data) {
-      setIsAuthenticated(true)
-      setCurrentUser(data)
-    }
-  }, [])
-
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!isAuthenticated) {
-      alert("Please Sign In to proceed!")
-      return
-    }
+
     const pdfDoc = await PDFDocument.create()
     const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
 
