@@ -11,6 +11,8 @@
     "history": "^5.0.1",
     "moment": "^2.29.1",
     "pdf-lib": "^1.17.0",
+    "pdf-parse": "^1.1.1",
+    "pdfreader": "^1.2.13",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",

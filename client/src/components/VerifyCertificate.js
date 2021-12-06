@@ -1,35 +1,45 @@
 import React from "react"
-import { PDFDocument } from "pdf-lib"
+// import { PDFDocument } from "pdf-lib"
+import axios from "../api"
+import getDataFromPDF from '../helper/readPDF.js';
 
 const VerifyCertificate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
-
-    const file = event.target[0].files[0]
+    console.log(event.target[1].files[0]);
+    const file = event.target[1].files[0]
     if (file.type !== "application/pdf") {
       alert("Please upload file in pdf format only!")
       return
     }
+    
+    const data = getDataFromPDF(file.name);
+    console.log("123121321")
+    console.log(data)
+    // await axios.post("/api/get_certificate", keywords[0]);
 
-    const fileURL = event.target[0].value
 
-    // read Metadata and verify if such certificate exists
-    // pdf url required to read meta data: https://jsfiddle.net/Hopding/eg8rfz3k/16/
-    const pdfUrl = fileURL
-    const pdfBytes = await fetch(pdfUrl).then((res) => res.arrayBuffer())
 
-    // Load the PDF document without updating its existing metadata
-    const pdfDoc = await PDFDocument.load(pdfBytes, {
-      updateMetadata: false,
-    })
+    // const pdfBytes = fs.readFile('./abc.pdf').then((res) => res.arrayBuffer())
+    // console.log(pdfBytes)
+    // // Load the PDF document without updating its existing metadata
+    // const pdfDoc = await PDFDocument.load(pdfBytes, {
+    //   updateMetadata: false,
+    // })
+    // console.log("asdasdasdasdadasdasd");
 
-    // Read all available metadata fields
-    const title = pdfDoc.getTitle()
-    const author = pdfDoc.getAuthor()
-    const subject = pdfDoc.getSubject()
-    const producer = pdfDoc.getProducer()
-    const creationDate = pdfDoc.getCreationDate()
-    const modificationDate = pdfDoc.getModificationDate()
+
+
+    // // Read all available metadata fields
+    // const title = pdfDoc.getTitle()
+    // const author = pdfDoc.getAuthor()
+    // const subject = pdfDoc.getSubject()
+    // const producer = pdfDoc.getProducer()
+    // const creationDate = pdfDoc.getCreationDate()
+    // const modificationDate = pdfDoc.getModificationDate()
+    // const keywords = pdfDoc.getKeywords();
+    // console.log(keywords);
+    // console.log(title);
   }
 
   return (

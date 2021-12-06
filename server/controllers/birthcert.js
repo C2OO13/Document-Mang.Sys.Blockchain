@@ -5,9 +5,11 @@ import fillForm from '../helper/birthCertiTemplateFill.js';
 
 export const getBirthCertOne = async (req, res) => {
     const body = req.body;
+    console.log('BODY', body);
     try {
         const certi = await BirthCert.findOne({ name: body.name, guardian: body.guardian });
-        const b_certi = JSON.parse(await getCertificate(certi.id));
+        console.log(certi)
+        // const b_certi = JSON.parse(await getCertificate(certi.id));
 
         res.status(200).json(b_certi);
     } catch (error) {
