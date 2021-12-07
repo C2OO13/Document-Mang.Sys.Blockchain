@@ -1,16 +1,24 @@
 const { createHash } = await import('crypto');
 
-const hash = createHash('sha256');
-
 export const getHash = (data) => {
 
     var input = '';
 
-    for (var x in data) {
-        input += data[x];
+    const orderedData = Object.keys(data).sort().reduce(
+        (obj, key) => {
+            obj[key] = data[key];
+            return obj;
+        },
+        {}
+    );
+    if (orderedData.dob.length > 10) orderedData.dob = orderedData.dob.split('T')[0];
+    orderedData.tob = '';
+    for (var x in orderedData) {
+        input += orderedData[x];
     }
-
+    console.log("Hash Input: ", input);
     try {
+        const hash = createHash('sha256');
         hash.update(input.toString());
         const value = hash.digest('hex');
         return value;

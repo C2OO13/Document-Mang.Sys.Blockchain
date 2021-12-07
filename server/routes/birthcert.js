@@ -1,5 +1,5 @@
 import express from "express";
-import { getBirthCertOne, getBirthCert, createBirthCert } from '../controllers/birthcert.js'
+import { getBirthCert, createBirthCert } from '../controllers/birthcert.js'
 import getDataFromPDF from "../controllers/pdfReader.js";
 
 const router = express.Router();

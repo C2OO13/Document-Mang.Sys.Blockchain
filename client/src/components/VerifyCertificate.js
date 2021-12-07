@@ -2,24 +2,30 @@ import React from "react"
 import axios from "../api"
 
 const VerifyCertificate = () => {
+
+  const getBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const file = event.target[0].files[0]
+    console.log(file)
     if (file.type !== "application/pdf") {
       alert("Please upload file in pdf format only!")
       return
     }
 
-    let formData = new FormData()
-    formData.append("file", file)
-    formData.append("name", file.name)
-    const { data } = await axios.post("/api/verify_pdf", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-
-    // data.data has info about certificate being uploaded
+    const d = await getBase64(file);
+    // console.log('Data', d)
+    console.log({ name: file.name, data: JSON.stringify(d) })
+    const { data } = (await axios.post("/api/verify_pdf", { name: file.name, data: JSON.stringify(d) }));
+    console.log(data);
 
     if (data.verification) {
       alert("Verified!")

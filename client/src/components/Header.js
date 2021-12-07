@@ -16,9 +16,9 @@ const Header = () => {
         <Link to="/verifyCertificate" className="item">
           Verify Certificate
         </Link>
-        <Link to="/uploadTemplate" className="item">
+        {/* <Link to="/uploadTemplate" className="item">
           Upload Template
-        </Link>
+        </Link> */}
         <GoogleAuth />
       </div>
     </div>

@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { writeFile } from 'fs';
+import { verifyBirthCertOne } from './birthcert.js';
+
 let rows = {};
 let data = [];
 
@@ -11,7 +13,7 @@ const f = (fileName) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename)
     const filePath = path.join(__dirname, '../pdf_file', fileName)
-    console.log('File Path', filePath)
+    // console.log('File Path', filePath)
     return new Promise(resolve => {
         pr.parseFileItems(filePath,
             (err, item) => {
@@ -45,17 +47,42 @@ const printRows = () => {
     return output;
 }
 
+const blobToFile = (theBlob, fileName) => {
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
+
 const getDataFromPDF = async (req, res) => {
     const body = req.body;
-    console.log('BODY', body);
-    const name = body.name;
-    const file = body.file;
-    writeFile(`${name}`, file, () => {
+
+    const stringval = body.data;
+    const fileName = body.name;
+
+    let encodedString = stringval.split(',')[1].split('"')[0]; //getting the base64 hash
+    let mimetype = stringval.split(',')[0].split(':')[1].split(';')[0]; //getting the mime type
+
+    let data = atob(encodedString); //ascii to binary
+
+    var ab = new ArrayBuffer(data.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < data.length; i++) {
+        ia[i] = data.charCodeAt(i);
+    }
+
+    const buffer = Buffer.from(ab)
+    writeFile(`pdf_file/${fileName}`, buffer, () => {
         console.log("File saved");
     });
-    name = "test.pdf";
+
+    let name = fileName;
+    console.log("fileName", fileName);
     const obj = await f(name);
-    const ans = { data: obj, verification: true }
+    // console.log(obj);
+    const verify = await verifyBirthCertOne(obj);
+    const ans = { data: obj, verification: verify }
+    console.log(ans);
     res.status(200).json(ans);
 };
 
