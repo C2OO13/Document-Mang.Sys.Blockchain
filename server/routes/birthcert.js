@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get('/api/get_certificate', getBirthCert);
 router.post('/api/create_certificate', createBirthCert);
-router.get('/api/read_pdf/:name', getDataFromPDF);
+router.post('/api/verify_pdf', getDataFromPDF);
 
 export default router;

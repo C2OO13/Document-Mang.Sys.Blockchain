@@ -1,15 +1,16 @@
 import pdfreader from "pdfreader";
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { writeFile } from 'fs';
 let rows = {};
 let data = [];
 
 const f = (fileName) => {
     const pr = new pdfreader.PdfReader();
     const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename) 
-    const filePath = path.join(__dirname,'../pdf_file',fileName)
+    const __dirname = dirname(__filename)
+    const filePath = path.join(__dirname, '../pdf_file', fileName)
     console.log('File Path', filePath)
     return new Promise(resolve => {
         pr.parseFileItems(filePath,
@@ -24,6 +25,7 @@ const f = (fileName) => {
         )
     });
 };
+
 
 const printRows = () => {
     let output = {};
@@ -44,10 +46,17 @@ const printRows = () => {
 }
 
 const getDataFromPDF = async (req, res) => {
-    console.log('NAME', req.params.name);
-    const name = req.params.name;
+    const body = req.body;
+    console.log('BODY', body);
+    const name = body.name;
+    const file = body.file;
+    writeFile(`${name}`, file, () => {
+        console.log("File saved");
+    });
+    name = "test.pdf";
     const obj = await f(name);
-    res.status(200).json(obj);
+    const ans = { data: obj, verification: true }
+    res.status(200).json(ans);
 };
 
 export default getDataFromPDF;

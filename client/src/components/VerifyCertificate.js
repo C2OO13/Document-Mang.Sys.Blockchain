@@ -1,7 +1,6 @@
 import React from "react"
 // import { PDFDocument } from "pdf-lib"
 import axios from "../api"
-import getDataFromPDF from '../helper/readPDF.js';
 
 const VerifyCertificate = () => {
   const handleSubmit = async (event) => {
@@ -13,9 +12,6 @@ const VerifyCertificate = () => {
       return
     }
     
-    const data = getDataFromPDF(file.name);
-    console.log("123121321")
-    console.log(data)
     // await axios.post("/api/get_certificate", keywords[0]);
 
 
