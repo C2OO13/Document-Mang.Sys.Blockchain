@@ -17,6 +17,9 @@ const Header = () => {
         <Link to="/upload_template" className="item">
           Upload Template
         </Link>
+        <Link to="/" className="item">
+          Sign Out
+        </Link>
       </div>
     </div>
   )

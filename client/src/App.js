@@ -10,6 +10,8 @@ import VerifyCertificate from './components/VerifyCertificate'
 import Authentication from './components/Authentication'
 import PasswordReset from './components/PasswordReset'
 import SignUp from './components/SignUp'
+import ForgotPassword from './components/ForgotPassword'
+import VerifyEmail from './components/VerifyEmail'
 
 const App = () => {
   return (
@@ -32,6 +34,8 @@ const App = () => {
           <Route path="/upload_template" exact component={UploadTemplate} />
           <Route path="/password_reset" exact component={PasswordReset} />
           <Route path="/signup" exact component={SignUp} />
+          <Route path="/change_password" exact component={ForgotPassword} />
+          <Route path="/verify_email" exact component={VerifyEmail} />
         </Switch>
       </BrowserRouter>
     </div>

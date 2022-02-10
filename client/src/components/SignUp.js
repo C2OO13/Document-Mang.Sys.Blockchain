@@ -1,8 +1,12 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 
 const SignUp = () => {
+  const history = useHistory()
+
   const handleSubmit = (e) => {
     e.preventDefault()
+    history.push('/verify_email')
   }
 
   return (
