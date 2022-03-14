@@ -6,7 +6,12 @@ const buildPath = path.resolve(process.cwd(), 'build');
 // fs.removeSync(buildPath);
 
 const contracts = [
-    'Certificate.sol',
+    'AadharCardContract.sol',
+    'Login.sol',
+    'BirthCertiContract.sol',
+    'ShareCertificateContract.sol',
+    'PassportCertiContract.sol',
+    'Dashboard.sol'
 ];
 const paths = [];
 const sources = [];
@@ -19,8 +24,23 @@ contracts.forEach((contract, index) => {
 const input = {
     language: 'Solidity',
     sources: {
-        'Certificate.sol': {
+        'AadharCardContract.sol': {
             content: sources[0],
+        },
+        'Login.sol': {
+            content: sources[1],
+        },
+        'BirthCertiContract.sol': {
+            content: sources[2],
+        },
+        'ShareCertificateContract.sol': {
+            content: sources[3],
+        },
+        'PassportCertiContract.sol': {
+            content: sources[4],
+        },
+        'Dashboard.sol': {
+            content: sources[5],
         },
     },
     settings: {
@@ -33,11 +53,12 @@ const input = {
 };
 
 function findImports(path) {
-    if (path === contracts[0])
-        return {
-            contents: sources[0],
-        };
-    else return { error: 'File not found' };
+    for (var i = 0; i < contracts.length; i++) {
+        if (path === contracts[i]) {
+            return { contents: sources[i], };
+        }
+    }
+    return { error: 'File not found' };
 }
 
 const output = JSON.parse(solc.compile(JSON.stringify(input), { import: findImports }));

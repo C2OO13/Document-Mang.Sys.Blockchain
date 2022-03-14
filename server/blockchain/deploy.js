@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const { InstitutionCertificates } = require("./build/Certificate.json");
+const { Dashboard } = require("./build/Dashboard.json");
 import { config } from 'dotenv';
 config({ path: '../.env' });
 import fs from 'fs-extra';
@@ -12,8 +12,8 @@ const addressPath = path.resolve(process.cwd(), 'build');
 
 async function deploy(web3, signer) {
 
-    const abi = InstitutionCertificates.abi;
-    const bytecode = InstitutionCertificates.evm.bytecode.object;
+    const abi = Dashboard.abi;
+    const bytecode = Dashboard.evm.bytecode.object;
 
     const contract = new web3.eth.Contract(abi);
     contract.options.data = bytecode;

@@ -16,9 +16,7 @@ export const verifyBirthCertOne = async (data) => {
         // res.status(200).json(true);
     } catch (error) {
         console.log(error);
-        res.status(500).json({
-            message: error.message
-        });
+        return false;
     }
 }
 
