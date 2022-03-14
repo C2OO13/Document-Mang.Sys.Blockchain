@@ -30,10 +30,7 @@ const SignIn = () => {
         <br />
         <p>
           Don't have an account?
-          <Link to="/signup">
-            {' '}
-            <u>Sign Up</u>
-          </Link>
+          <Link to="/signup"> Sign Up</Link>
         </p>
       </form>
     </div>

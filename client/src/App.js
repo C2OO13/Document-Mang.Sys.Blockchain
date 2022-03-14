@@ -7,11 +7,11 @@ import Header from './components/Header'
 import Home from './components/Home'
 import UploadTemplate from './components/UploadTemplate'
 import VerifyCertificate from './components/VerifyCertificate'
-import Authentication from './components/Authentication'
 import PasswordReset from './components/PasswordReset'
 import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
 import VerifyEmail from './components/VerifyEmail'
+import SignIn from './components/SignIn'
 
 const App = () => {
   return (
@@ -19,7 +19,7 @@ const App = () => {
       <BrowserRouter>
         <Header />
         <Switch>
-          <Route path="/" exact component={Authentication} />
+          <Route path="/" exact component={SignIn} />
           <Route path="/dashboard" exact component={Home} />
           <Route
             path="/create_certificate"
