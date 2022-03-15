@@ -5,6 +5,11 @@ import { dirname } from 'path';
 import { writeFile } from 'fs';
 import { verifyBirthCertOne } from './birthcert.js';
 
+const ipfsClient = require('ipfs-http-client');
+//import ipfsClient from 'ipfs-http-client'
+
+const ipfs = ipfsClient.create();
+
 let rows = {};
 let data = [];
 
@@ -54,13 +59,26 @@ const blobToFile = (theBlob, fileName) => {
     return theBlob;
 }
 
+const addFile = async (fileName, file) => {
+    //const file = fs.readFileSync(filePath);
+    const fileAdded = await ipfs.add({path: fileName, content: file});
+    const fileHash = fileAdded[0].hash;
+
+    return fileHash;
+};
+
 const getDataFromPDF = async (req, res) => {
     const body = req.body;
 
     const stringval = body.data;
     const fileName = body.name;
 
-    let encodedString = stringval.split(',')[1].split('"')[0]; //getting the base64 hash
+    const fileHash = await addFile(fileName, stringval);
+    comsole.log(fileHash);
+    //addFile(fileName, stringval);
+
+
+    /*let encodedString = stringval.split(',')[1].split('"')[0]; //getting the base64 hash
     let mimetype = stringval.split(',')[0].split(':')[1].split(';')[0]; //getting the mime type
 
     let data = atob(encodedString); //ascii to binary
@@ -83,7 +101,7 @@ const getDataFromPDF = async (req, res) => {
     const verify = await verifyBirthCertOne(obj);
     const ans = { data: obj, verification: verify }
     console.log(ans);
-    res.status(200).json(ans);
+    res.status(200).json(ans);*/
 };
 
 export default getDataFromPDF;
