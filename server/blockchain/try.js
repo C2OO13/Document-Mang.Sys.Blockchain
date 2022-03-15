@@ -17,7 +17,6 @@ const main = async () => {
         password: 'a',
         cpassword: 'a' 
     };
-    console.log(body);
     const data1 = await signup(body);
     console.log(data1);
     process.exit();

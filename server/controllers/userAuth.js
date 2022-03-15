@@ -36,6 +36,7 @@ export const signup = async (req, res) => {
     const data2 = await getOwner()
     console.log(`dvsvg`);
     console.log(data2);
+    console.log(`dvsvg`);
     const data = await MainContract.methods
             .owner()
             .call();
