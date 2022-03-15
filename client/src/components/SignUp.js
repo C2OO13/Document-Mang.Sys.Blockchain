@@ -37,6 +37,23 @@ const SignUp = () => {
         <input type="password" required />
         <br />
         <br />
+        <label>Register as:</label>
+        <br />
+        <br />
+        <input
+          type="radio"
+          id="Approver"
+          name="Profile"
+          value="Approver"
+          required
+        />
+        <label htmlFor="Approver"> Approver</label>
+        <br />
+        <input type="radio" id="Applicant" name="Profile" value="Applicant" />
+        <label htmlFor="Applicant"> Applicant</label>
+        <br />
+        <br />
+        <br />
         <input type="submit" className="ui button primary" value="Sign Up" />
       </form>
     </div>
