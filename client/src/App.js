@@ -5,7 +5,7 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom'
 import CreateCertificate from './components/CreateCertificate'
 import Header from './components/Header'
 import Home from './components/Home'
-import UploadTemplate from './components/UploadTemplate'
+// import UploadTemplate from './components/UploadTemplate'
 import VerifyCertificate from './components/VerifyCertificate'
 import PasswordReset from './components/PasswordReset'
 import SignUp from './components/SignUp'
@@ -31,7 +31,7 @@ const App = () => {
             exact
             component={VerifyCertificate}
           />
-          <Route path="/upload_template" exact component={UploadTemplate} />
+          {/* <Route path="/upload_template" exact component={UploadTemplate} /> */}
           <Route path="/password_reset" exact component={PasswordReset} />
           <Route path="/signup" exact component={SignUp} />
           <Route path="/change_password" exact component={ForgotPassword} />

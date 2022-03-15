@@ -33,12 +33,6 @@ contract Dashboard is Login, BirthCertiContract, AadharCardContract, ShareCertif
         return false;
     }
 
-    function isApplicant(string memory accName) public view returns(bool){
-        User memory u = getUser(accName);
-        if(u.profile == 1) return true;
-        return false;
-    }
-
     function isApprover(string memory accName) public view returns(bool){
         User memory u = getUser(accName);
         if(u.profile == 2 || isAdmin(accName)) return true;

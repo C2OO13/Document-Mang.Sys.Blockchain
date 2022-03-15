@@ -19,6 +19,6 @@ const main = async () => {
     };
     const data1 = await signup(body);
     console.log(data1);
-    process.exit();
+        process.exit();
 }
 main();

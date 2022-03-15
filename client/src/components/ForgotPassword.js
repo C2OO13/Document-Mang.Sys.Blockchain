@@ -1,8 +1,11 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 
 const ForgotPassword = () => {
+  const history = useHistory()
   const handleSubmit = (e) => {
     e.preventDefault()
+    history.push('/dashboard')
   }
 
   return (
