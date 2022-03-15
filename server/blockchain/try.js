@@ -1,6 +1,6 @@
-import { getOwner, newCertificate, getCertificate } from './methods.js';
+import { getOwner } from './methods.js';
 import { getHash } from '../helper/getHash.js';
-
+import { signup } from '../controllers/userAuth.js'
 const main = async () => {
 
     const data2 = await getOwner();
@@ -11,6 +11,14 @@ const main = async () => {
     // console.log(data);
     console.log(getHash(data2));
 
-    process.exit();
+    const body = {
+        email: 'a',
+        name: 'a',
+        password: 'a',
+        cpassword: 'a' 
+    };
+    const data1 = await signup(body);
+    console.log(data1);
+        process.exit();
 }
 main();
