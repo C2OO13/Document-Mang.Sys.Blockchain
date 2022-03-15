@@ -13,7 +13,7 @@ const address = signer.address;
 export const getOwner = async () => {
     try {
         const data = await MainContract.methods
-            .contractOwner()
+            .owner()
             .call();
 
         return JSON.stringify(data);

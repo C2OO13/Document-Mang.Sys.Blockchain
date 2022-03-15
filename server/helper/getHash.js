@@ -11,8 +11,8 @@ export const getHash = (data) => {
         },
         {}
     );
-    if (orderedData.dob.length > 10) orderedData.dob = orderedData.dob.split('T')[0];
-    orderedData.tob = '';
+    // if (orderedData.dob.length > 10) orderedData.dob = orderedData.dob.split('T')[0];
+    // orderedData.tob = '';
     for (var x in orderedData) {
         input += orderedData[x];
     }
