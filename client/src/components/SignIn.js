@@ -1,9 +1,34 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import axios from '../api'
 
 const SignIn = () => {
-  const handleSubmit = (e) => {
+  const history = useHistory()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await axios.get('/check-auth')
+      if (data.isAuthenticated) {
+        history.push('/dashboard')
+      }
+    }
+
+    checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    const email = e.target[0].value
+    const password = e.target[1].value
+    let formData = new FormData()
+    formData.append('email', email)
+    formData.append('password', password)
+    await axios.post('/login', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   }
 
   return (
