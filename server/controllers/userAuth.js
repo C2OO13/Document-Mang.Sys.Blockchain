@@ -18,6 +18,7 @@ import { StatusCodes } from 'http-status-codes';
 
 // Register User 
 export const signup = async (req, res) => {
+  console.log(`print 3`);
   console.log(req);
   console.log(address);
   // const { body } = req;
@@ -29,18 +30,20 @@ export const signup = async (req, res) => {
       password: body.password,
       cpassword: body.cpassword
     };
+    console.log(`print 4`);
     console.log(user);
     const data1 = await MainContract.methods.registerApplicant(user.accountName, user.name, user.password).send({ from: address, gas: "300000" });
-    console.log(`dvsvgcsc`);
+    console.log(`print 5`);
     console.log(data1);
     const data2 = await getOwner()
-    console.log(`dvsvg`);
+    console.log(`print 6`);
     console.log(data2);
-    console.log(`dvsvg`);
+    console.log(`print 7`);
     const data = await MainContract.methods
             .owner()
             .call();
     console.log(data);
+    console.log(`print 8`);  
   }
   catch {}
 }

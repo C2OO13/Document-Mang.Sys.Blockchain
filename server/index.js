@@ -3,9 +3,9 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import express from 'express';
 import passport from 'passport';
-import session from 'express-session'
+import session from 'express-session';
 import { ensureAuthenticated, forwardAuthenticated } from './middlewares/auth/passportAuth.js';
-import routes from './routes/index.js'
+import routes from './routes/index.js';
 // import errorHandler from '../middlewares/errorHandler'     
 // import mongoose from "mongoose";
 import birthCertRoutes from './routes/birthcert.js';
@@ -17,7 +17,6 @@ config({ path: './.env' });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// What???
 app.use(bodyParser.json({
     limit: "30mb",
     extended: true
@@ -27,11 +26,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(cors());
-/*
-// ErrorHandler middleware
-app.use(errorHandler.notFound);
-app.use(errorHandler.errorHandler);
-*/
+
+// // ErrorHandler middleware
+// app.use(errorHandler.notFound);
+// app.use(errorHandler.errorHandler);
+
 // Start Session
 app.use(
     session({

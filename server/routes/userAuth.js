@@ -1,17 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { forwardAuthenticated } = require('../middlewares/passportAuth');
+import { forwardAuthenticated } from '../middlewares/auth/passportAuth.js';
 
-const {
-  login,
-  signup,
-  checkAuth,
-  logout,
-} = require('../controllers/userAuth');
-const passportStrategy = require('../middlewares/auth/passportStrategy');
-const {
-  signupErrorHandler,
-} = require('../middlewares/errorHandler/authErrorHandler');
+import { login, signup, checkAuth, logout, } from '../controllers/userAuth.js';
+import { passportStrategy } from '../middlewares/auth/passportStrategy.js';
+// import { signupErrorHandler } from '../middlewares/errorHandler/authErrorHandler.js';
 
 // Login Page
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
