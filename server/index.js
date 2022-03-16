@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import express from 'express';
 import passport from 'passport';
+import passportLocal from 'passport-local';
 import session from 'express-session';
 import { ensureAuthenticated, forwardAuthenticated } from './middlewares/auth/passportAuth.js';
 import routes from './routes/index.js';
@@ -41,6 +42,7 @@ app.use(
   );
   
 // Authentication Middleware
+import './middlewares/auth/passportStrategy.js'
 app.use(passport.initialize());
 app.use(passport.session());
   
