@@ -4,6 +4,7 @@ import { signup } from '../controllers/userAuth.js'
 import { config } from 'dotenv';
 import MainContract from "./MainContract.js";
 import web3 from "./web3.js";
+import { getIpfsLink } from './getIpfsLink.js'
 
 const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
 web3.eth.accounts.wallet.add(signer);
@@ -13,14 +14,16 @@ config({ path: '../.env' });
 
 const main = async () => {
 
-    const data2 = await getOwner();
-    console.log(data2);
+    // const data2 = await getOwner();
+    // console.log(data2);
     // const id = JSON.parse(await newCertificate("0x1840A76Cd21f1c1aEC33CC6C0Ec2b42b6ed64de5", "Smt", "patel"));
     // console.log(id);
     // const data = JSON.parse(await getCertificate(id));
     // console.log(data);
-    console.log(getHash(data2));
+    // console.log(getHash(data2));
 
+    const link = await getIpfsLink("data2");
+    console.log(link);
     // const body = {
     //     email: 'a',
     //     name: 'a',

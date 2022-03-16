@@ -2,7 +2,7 @@ import express from "express";
 // import { getBirthCert, createBirthCert } from '../controllers/birthcert.js'
 // import getDataFromPDF from "../controllers/pdfReader.js";
 
-import { approveAadharCard, approveBirthCerti, approvePassportCerti, changePassword, checkIfSharedCerti, getAadharCard, getBirthCerti, getCountPendingAadharCard, getCountPendingBirthCerti, getCountPendingPassportCerti, getId, getOwner, getPassportCerti, getUser, isAdmin, isApplicant, isApprover, login, newAadharCard, newBirthCerti, newPassportCerti, registerAdmin, registerApplicant, registerApprover, rejectAadharCard, rejectBirthCerti, rejectPassportCerti, setAadharCard, setBirthCerti, setPassportCerti, shareCerti } from '../blockchain/methods.js'
+import { approveAadharCard, approveBirthCerti, approvePassportCerti, changePassword, checkIfSharedCerti, getAadharCard, getBirthCerti, getCountPendingAadharCard, getCountPendingBirthCerti, getCountPendingPassportCerti, getId, getOwner, getPassportCerti, getTopAadharCerti, getTopBirthCerti, getTopPassportCerti, getUser, isAdmin, isApplicant, isApprover, login, newAadharCard, newBirthCerti, newPassportCerti, registerAdmin, registerApplicant, registerApprover, rejectAadharCard, rejectBirthCerti, rejectPassportCerti, setAadharCard, setBirthCerti, setPassportCerti, shareCerti, verifyAadharCerti, verifyBirthCerti, verifyPassportCerti } from '../blockchain/methods.js'
 
 const router = express.Router();
 
@@ -17,10 +17,21 @@ router.get('/api/login', login);
 router.get('/api/is_applicant', isApplicant);
 router.get('/api/is_approver', isApprover);
 router.get('/api/is_admin', isAdmin);
-router.get('/api/register_applicant', registerApplicant);
-router.get('/api/register_approver', registerApprover);
-router.get('/api/register_admin', registerAdmin);
-router.get('/api/change_pasword', changePassword);
+router.post('/api/register_applicant', registerApplicant);
+router.post('/api/register_approver', registerApprover);
+router.post('/api/register_admin', registerAdmin);
+router.post('/api/change_pasword', changePassword);
+
+
+
+router.get('/api/top_birth_certi', getTopBirthCerti);
+router.get('/api/top_aadhar_certi', getTopAadharCerti);
+router.get('/api/top_passport_certi', getTopPassportCerti);
+
+
+router.post('/api/verify_birth_certi', verifyBirthCerti);
+router.post('/api/verify_aadhar_certi', verifyAadharCerti);
+router.post('/api/verify_passport_certi', verifyPassportCerti);
 
 router.post('/api/new_birth_certi', newBirthCerti);
 router.patch('/api/set_birth_certi', setBirthCerti);
