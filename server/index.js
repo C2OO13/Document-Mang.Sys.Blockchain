@@ -49,7 +49,7 @@ app.use('/', routes)
 
 // Initial Page
 app.get('/', (req, res) => {
-    res.render("Hello BBDMS")
+    res.send("Hello BBDMS")
 });
 
 app.use('/', birthCertRoutes);

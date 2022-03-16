@@ -10,14 +10,14 @@ const address = signer.address;
 export const newBirthCerti = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .newBirthCerti(req.body.acc, req.body.name, req.body.dob, ipfsHash, req.body.desc)
+            .newBirthCerti(req.body.acc, req.body.name, req.body.dob, req.body.ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -27,11 +27,11 @@ export const setBirthCerti = async (req, res) => {
             .setBirthCerti(req.body.acc, req.body.name, req.body.dob, ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -41,11 +41,11 @@ export const approveBirthCerti = async (req, res) => {
             .approveBirthCerti(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -55,11 +55,11 @@ export const rejectBirthCerti = async (req, res) => {
             .rejectBirthCerti(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -69,11 +69,11 @@ export const getBirthCerti = async (req, res) => {
             .getBirthCerti(req.body.acc)
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -83,11 +83,11 @@ export const getCountPendingBirthCerti = async (req, res) => {
             .getCountPendingBirthCerti()
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -97,11 +97,11 @@ export const newAadharCard = async (req, res) => {
             .newAadharCard(req.body.acc, req.body.name, req.body.number, ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -111,11 +111,11 @@ export const setAadharCard = async (req, res) => {
             .setAadharCard(req.body.acc, req.body.name, req.body.number, ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -125,11 +125,11 @@ export const approveAadharCard = async (req, res) => {
             .approveAadharCard(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -139,11 +139,11 @@ export const rejectAadharCard = async (req, res) => {
             .rejectAadharCard(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -153,11 +153,11 @@ export const getAadharCard = async (req, res) => {
             .getAadharCard(req.body.acc)
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -167,11 +167,11 @@ export const getCountPendingAadharCard = async (req, res) => {
             .getCountPendingAadharCard()
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -181,11 +181,11 @@ export const shareCerti = async (req, res) => {
             .shareCerti(req.body.acc, req.body.viewer, req.body.type, req.body.time)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -195,11 +195,11 @@ export const checkIfSharedCerti = async (req, res) => {
             .checkIfSharedCerti(req.body.acc, req.body.viewer, req.body.type)
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -209,11 +209,11 @@ export const newPassportCerti = async (req, res) => {
             .newPassportCerti(req.body.acc, req.body.name, req.body.dob, ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -223,11 +223,11 @@ export const setPassportCerti = async (req, res) => {
             .setPassportCerti(req.body.acc, req.body.name, req.body.dob, ipfsHash, req.body.desc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -237,11 +237,11 @@ export const approvePassportCerti = async (req, res) => {
             .approvePassportCerti(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -251,11 +251,11 @@ export const rejectPassportCerti = async (req, res) => {
             .rejectPassportCerti(req.body.acc)
             .send({ from: address, gas: "300000" });
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -265,11 +265,11 @@ export const getPassportCerti = async (req, res) => {
             .getPassportCerti(req.body.acc)
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -279,28 +279,167 @@ export const getCountPendingPassportCerti = async (req, res) => {
             .getCountPendingPassportCerti()
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
-export const getOwner = async () => {
+export const getOwner = async (req, res) => {
+    console.log("Request owner received!");
     try {
         const data = await MainContract.methods
             .owner()
             .call();
-
-        return JSON.stringify(data);
+        // console.log(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        res.send(error.message);
     }
 }
 
+export const getUser = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getUser(req.body.accName)
+            .call();
+        // console.log(data);
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const getId = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getId(req.body.accName)
+            .call();
+        // console.log(data);
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const isAdmin = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .isAdmin(req.body.accName)
+            .call();
+        // console.log(data);
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+
+export const isApprover = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .isApprover(req.body.accName)
+            .call();
+
+        return res.send(JSON.stringify(data));
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+
+export const isApplicant = async (req, res) => {
+    try {
+        var data = await MainContract.methods
+            .getUser(req.body.accName)
+            .call();
+        if (data[3] == 1) data = true;
+        else data = false;
+        return res.send(JSON.stringify(data));
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const login = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .login(req.body.accName, req.body.password)
+            .call();
+        return res.send(JSON.stringify(data));
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const registerApplicant = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .registerApplicant(req.body.accName, req.body.name, req.body.password)
+            .send({ from: address, gas: "300000" });
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
+export const registerApprover = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .registerApplicant(req.body.accNameAdmin, req.body.passwordAdmin, req.body.accName, req.body.name, req.body.password)
+            .send({ from: address, gas: "300000" });
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
+export const registerAdmin = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .registerAdmin(req.body.accName, req.body.name, req.body.password)
+            .send({ from: address, gas: "300000" });
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
+export const changePassword = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .changePassword(req.body.accName, req.body.password, req.body.newPassword)
+            .send({ from: address, gas: "300000" });
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
 /*
 export const newCertificate = async (acc, hash, desc) => {
     try {
@@ -316,7 +455,7 @@ export const newCertificate = async (acc, hash, desc) => {
         return JSON.stringify(id);
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -327,11 +466,11 @@ export const getCertificate = async (id) => {
             .getCertificate(id)
             .call();
 
-        return JSON.stringify(data);
+        return res.send(JSON.stringify(data));
 
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -345,7 +484,7 @@ export const setCertificate = async (id, acc, hash, desc) => {
         return JSON.stringify('Success');
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 
@@ -357,7 +496,7 @@ export const setActive = async (id, state) => {
         return JSON.stringify('Success');
     } catch (error) {
         console.log(error);
-        return error.message;
+        return res.send(error.message);
     }
 }
 */

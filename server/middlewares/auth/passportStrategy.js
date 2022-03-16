@@ -20,7 +20,8 @@ module.exports = function(passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
       // Check for exisiting user
-      if (!MainContract.methods.isApplicant(email).call()) {
+      const data = await MainContract.methods.getUser(email).call();
+      if (data.profile == 1) {
         return done(null, false, { message: 'This Email is not Registered!!!' });
       }
       else {
