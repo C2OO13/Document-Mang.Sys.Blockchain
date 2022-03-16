@@ -24,7 +24,6 @@ const CreateCertificate = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log(certificate)
 
     let formData = {}
 

@@ -19,7 +19,7 @@ const PassportCertificateForm = () => {
       <input type="text" required />
       <br />
       <br />
-      <label for="phone">Contact Number:</label>
+      <label htmlFor="phone">Contact Number:</label>
       <input type="tel" pattern="[0-9]{10}" required />
       <br />
       <br />
