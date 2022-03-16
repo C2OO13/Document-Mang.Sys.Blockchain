@@ -26,20 +26,16 @@ const CreateCertificate = () => {
     event.preventDefault()
     console.log(certificate)
 
-    let formData = new FormData()
+    let formData = {}
 
     if (certificate === 1) {
-      formData.append('childName', event.target[0].value)
-      formData.append('guardianName', event.target[1].value)
-      formData.append('hospitalName', event.target[2].value)
-      formData.append('dateOfBirth', event.target[3].value)
-      formData.append('timeOfBirth', event.target[4].value)
-      formData.append('location', event.target[5].value)
-      const { data } = await axios.post('/api/new_birth_certi', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      formData.childName = event.target[0].value
+      formData.guardianName = event.target[1].value
+      formData.hospitalName = event.target[2].value
+      formData.dateOfBirth = event.target[3].value
+      formData.timeOfBirth = event.target[4].value
+      formData.location = event.target[5].value
+      const { data } = await axios.post('/api/new_birth_certi', formData)
       if (data === 'true') {
         alert('Birth Certificate Sent for Approval!')
         history.push('/dashboard')
@@ -47,15 +43,11 @@ const CreateCertificate = () => {
         alert('Something went wrong! Please try again!')
       }
     } else if (certificate === 2) {
-      formData.append('applicantName', event.target[0].value)
-      formData.append('fatherName', event.target[1].value)
-      formData.append('address', event.target[2].value)
-      formData.append('contactNumber', event.target[3].value)
-      const { data } = await axios.post('/api/new_aadhar_card', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      formData.applicantName = event.target[0].value
+      formData.fatherName = event.target[1].value
+      formData.address = event.target[2].value
+      formData.contactNumber = event.target[3].value
+      const { data } = await axios.post('/api/new_aadhar_card', formData)
       if (data === 'true') {
         alert('AadharCard certificate sent for approval!')
         history.push('/dashboard')
@@ -63,17 +55,13 @@ const CreateCertificate = () => {
         alert('Something went wrong! Please try again!')
       }
     } else {
-      formData.append('applicantName', event.target[0].value)
-      formData.append('fatherName', event.target[1].value)
-      formData.append('motherName', event.target[2].value)
-      formData.append('address', event.target[3].value)
-      formData.append('contactNumber', event.target[4].value)
-      formData.append('dateOfBirth', event.target[5].value)
-      const { data } = await axios.post('/api/new_passport_certi', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      formData.applicantName = event.target[0].value
+      formData.fatherName = event.target[1].value
+      formData.motherName = event.target[2].value
+      formData.address = event.target[3].value
+      formData.contactNumber = event.target[4].value
+      formData.dateOfBirth = event.target[5].value
+      const { data } = await axios.post('/api/new_passport_certi', formData)
       if (data === 'true') {
         alert('Passport certificate sent for approval!')
         history.push('/dashboard')
