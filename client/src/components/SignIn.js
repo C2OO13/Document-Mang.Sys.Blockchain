@@ -21,14 +21,10 @@ const SignIn = () => {
     e.preventDefault()
     const email = e.target[0].value
     const password = e.target[1].value
-    let formData = new FormData()
-    formData.append('email', email)
-    formData.append('password', password)
-    await axios.post('/login', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    let formData = {}
+    formData.email = email
+    formData.password = password
+    await axios.post('/login', formData)
   }
 
   return (
