@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+
+import axios from '../api'
 
 const ForgotPassword = () => {
   const history = useHistory()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await axios.get('/check-auth')
+      if (data.isAuthenticated) {
+        history.push('/dashboard')
+      }
+    }
+
+    checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     history.push('/dashboard')

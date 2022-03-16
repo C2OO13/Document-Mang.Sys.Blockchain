@@ -27,7 +27,6 @@ const BirthCertificateForm = () => {
       <input type="text" required />
       <br />
       <br />
-      <input type="submit" className="ui button primary" value="Create" />
     </>
   )
 }

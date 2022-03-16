@@ -1,8 +1,27 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+
+import axios from '../api'
 
 const Header = () => {
-  return (
+  const history = useHistory()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await axios.get('/check-auth')
+      if (!data.isAuthenticated) {
+        history.push('/')
+      } else {
+        setIsAuthenticated(true)
+      }
+    }
+
+    checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const jsx = !isAuthenticated ? null : (
     <div className="ui secondary pointing menu">
       <Link to="/dashboard" className="item">
         BBDMS
@@ -14,15 +33,14 @@ const Header = () => {
         <Link to="/verify_certificate" className="item">
           Verify Certificate
         </Link>
-        {/* <Link to="/upload_template" className="item">
-          Upload Template
-        </Link> */}
-        <Link to="/" className="item">
+        <Link to="/" className="item" onClick={() => {}}>
           Sign Out
         </Link>
       </div>
     </div>
   )
+
+  return jsx
 }
 
 export default Header
