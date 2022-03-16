@@ -35,7 +35,7 @@ const VerifyCertificate = () => {
         'Content-Type': 'multipart/form-data',
       },
     })
-    if (data.ok) {
+    if (data === 'true') {
       alert('Valid Certificate!')
     } else {
       alert('Not Valid Certificate!')
