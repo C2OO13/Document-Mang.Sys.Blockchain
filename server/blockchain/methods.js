@@ -9,22 +9,60 @@ import { passportCreate } from '../pdfHelpers/passportCreate.js';
 import { birthRead } from '../pdfHelpers/birthRead.js';
 import { aadharRead } from '../pdfHelpers/aadharRead.js';
 import { passportRead } from '../pdfHelpers/passportRead.js';
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename)
+const uploadDir = path.join(__dirname, '../pdf_file')
 
 const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
 web3.eth.accounts.wallet.add(signer);
 const address = signer.address;
 
 
-export const verifyBirthCerti = async (req, res) => {
+export const verifyCerti = async (req, res) => {
     try {
-        var data = req.body;
-        await birthCreate(data);
-        const link = await getIpfsLink(data.email);
-        await MainContract.methods
-            .newBirthCerti(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
-            .send({ from: address, gas: "300000" });
+        const { type, email } = req.body;
+        const file = req.file.buffer;
+        var inputData, storedData;
+        fs.writeFileSync(path.join(uploadDir, `Input${email}.pdf`))
+        const link = await getIpfsLink(`Input${email}`);
+        switch (type) {
+            case 1: {
+                inputData = birthRead(link);
+                storedData = await MainContract.methods
+                    .getBirthCerti(email)
+                    .call();
+                storedData = birthRead(storedData[2])
+                break;
+            }
+            case 2: {
+                inputData = aadharRead(link);
+                storedData = await MainContract.methods
+                    .getAadharCard(email)
+                    .call();
+                storedData = aadharRead(storedData[2])
+                break;
+            }
+            case 3: {
+                inputData = passportRead(link);
+                storedData = await MainContract.methods
+                    .getPassportCerti(email)
+                    .call();
+                storedData = passportRead(storedData[2])
+                break;
+            }
+        }
 
-        return res.send(JSON.stringify(true));
+        var chk = true;
+        for (var i = 0; i < inputData.length; i++) {
+            if (inputData[i] != storedData[i]) {
+                chk = false;
+                break;
+            }
+        }
+        return res.send(JSON.stringify(chk));
 
     } catch (error) {
         console.log(error);
@@ -32,38 +70,6 @@ export const verifyBirthCerti = async (req, res) => {
     }
 }
 
-export const verifyAadharCerti = async (req, res) => {
-    try {
-        var data = req.body;
-        await birthCreate(data);
-        const link = await getIpfsLink(data.email);
-        await MainContract.methods
-            .newBirthCerti(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
-            .send({ from: address, gas: "300000" });
-
-        return res.send(JSON.stringify(true));
-
-    } catch (error) {
-        console.log(error);
-        return res.send(JSON.stringify(false));
-    }
-}
-export const verifyPassportCerti = async (req, res) => {
-    try {
-        var data = req.body;
-        await birthCreate(data);
-        const link = await getIpfsLink(data.email);
-        await MainContract.methods
-            .newBirthCerti(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
-            .send({ from: address, gas: "300000" });
-
-        return res.send(JSON.stringify(true));
-
-    } catch (error) {
-        console.log(error);
-        return res.send(JSON.stringify(false));
-    }
-}
 export const newBirthCerti = async (req, res) => {
     try {
         var data = req.body;

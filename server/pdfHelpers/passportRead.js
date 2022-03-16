@@ -20,13 +20,13 @@ export const passportRead = async (link) => {
     const dateOfBirth = form.getTextField('date_of_birth')
 
     // Read The Field  Values
-    var data = {};
-    data.applicantNameValue = applicantName.getText()
-    data.fatherNameValue = fatherName.getText()
-    data.motherNameValue = motherName.getText()
-    data.addressValue = address.getText()
-    data.contactNoValue = contactNo.getText()
-    data.dateOfBirthValue = dateOfBirth.getText()
+    var data = [];
+    data.push(applicantName.getText());
+    data.push(fatherName.getText());
+    data.push(motherName.getText());
+    data.push(address.getText());
+    data.push(contactNo.getText());
+    data.push(dateOfBirth.getText());
 
     console.log(data)
 

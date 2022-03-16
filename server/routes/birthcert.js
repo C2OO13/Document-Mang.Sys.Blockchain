@@ -2,8 +2,9 @@ import express from "express";
 // import { getBirthCert, createBirthCert } from '../controllers/birthcert.js'
 // import getDataFromPDF from "../controllers/pdfReader.js";
 
-import { approveAadharCard, approveBirthCerti, approvePassportCerti, changePassword, checkIfSharedCerti, getAadharCard, getBirthCerti, getCountPendingAadharCard, getCountPendingBirthCerti, getCountPendingPassportCerti, getId, getOwner, getPassportCerti, getTopAadharCerti, getTopBirthCerti, getTopPassportCerti, getUser, isAdmin, isApplicant, isApprover, login, newAadharCard, newBirthCerti, newPassportCerti, registerAdmin, registerApplicant, registerApprover, rejectAadharCard, rejectBirthCerti, rejectPassportCerti, setAadharCard, setBirthCerti, setPassportCerti, shareCerti, verifyAadharCerti, verifyBirthCerti, verifyPassportCerti } from '../blockchain/methods.js'
-
+import { approveAadharCard, approveBirthCerti, approvePassportCerti, changePassword, checkIfSharedCerti, getAadharCard, getBirthCerti, getCountPendingAadharCard, getCountPendingBirthCerti, getCountPendingPassportCerti, getId, getOwner, getPassportCerti, getTopAadharCerti, getTopBirthCerti, getTopPassportCerti, getUser, isAdmin, isApplicant, isApprover, login, newAadharCard, newBirthCerti, newPassportCerti, registerAdmin, registerApplicant, registerApprover, rejectAadharCard, rejectBirthCerti, rejectPassportCerti, setAadharCard, setBirthCerti, setPassportCerti, shareCerti, verifyCerti } from '../blockchain/methods.js'
+import multer from 'multer';
+const upload = multer();
 const router = express.Router();
 
 // router.get('/api/get_certificate', getBirthCert);
@@ -29,9 +30,7 @@ router.get('/api/top_aadhar_certi', getTopAadharCerti);
 router.get('/api/top_passport_certi', getTopPassportCerti);
 
 
-router.post('/api/verify_birth_certi', verifyBirthCerti);
-router.post('/api/verify_aadhar_certi', verifyAadharCerti);
-router.post('/api/verify_passport_certi', verifyPassportCerti);
+router.post('/api/verify_certi', upload.single('certificate'), verifyCerti);
 
 router.post('/api/new_birth_certi', newBirthCerti);
 router.patch('/api/set_birth_certi', setBirthCerti);

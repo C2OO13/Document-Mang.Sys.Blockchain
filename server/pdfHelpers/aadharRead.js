@@ -13,7 +13,7 @@ export const aadharRead = async (link) => {
     const form = pdfDoc.getForm()
 
     // Read The Field  Values
-    var data = {};
+    var data = [];
 
     const applicantName = form.getTextField('applicant_name')
     const fatherName = form.getTextField('father_name')
@@ -21,10 +21,10 @@ export const aadharRead = async (link) => {
     const contactNo = form.getTextField('contact_no')
 
     // Read The Field  Values
-    data.applicantNameValue = applicantName.getText()
-    data.fatherNameValue = fatherName.getText()
-    data.addressValue = address.getText()
-    data.contactNoValue = contactNo.getText()
+    data.push(applicantName.getText());
+    data.push(fatherName.getText());
+    data.push(address.getText());
+    data.push(contactNo.getText());
 
     console.log(data)
 

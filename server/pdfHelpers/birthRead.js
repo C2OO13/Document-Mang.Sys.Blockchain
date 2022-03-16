@@ -21,13 +21,13 @@ export const birthRead = async (link) => {
     const location = form.getTextField('location_of_birth')
 
     // Read The Field  Values
-    var data = {};
-    data.childNameValue = childName.getText()
-    data.guardianNameValue = guardianName.getText()
-    data.hospitalNameValue = hospitalName.getText()
-    data.dateOfBirthValue = dateOfBirth.getText()
-    data.timeOfBirthValue = timeOfBirth.getText()
-    data.locationValue = location.getText()
+    var data = [];
+    data.push(childName.getText())
+    data.push(guardianName.getText());
+    data.push(hospitalName.getText());
+    data.push(dateOfBirth.getText());
+    data.push(timeOfBirth.getText());
+    data.push(location.getText());
 
     console.log(data)
 
