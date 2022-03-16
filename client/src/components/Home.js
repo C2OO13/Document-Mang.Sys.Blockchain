@@ -6,14 +6,17 @@ const Home = () => {
   const [dashboard, setDashboard] = useState([])
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkUserAndGetData = async () => {
       const { data } = await axios.get('/api/is_applicant')
       if (data) {
+        const { birthData } = await axios.get('/api/get_birth_certi')
+        const { aadharData } = await axios.get('/api/get_aadhar_card')
+        const { passportData } = await axios.get('/api/get_passport_certi')
       } else {
       }
     }
 
-    checkUser()
+    checkUserAndGetData()
   }, [])
 
   return (
