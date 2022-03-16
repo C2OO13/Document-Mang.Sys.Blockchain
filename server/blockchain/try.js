@@ -1,6 +1,16 @@
 import { getOwner } from './methods.js';
 import { getHash } from '../helper/getHash.js';
 import { signup } from '../controllers/userAuth.js'
+import { config } from 'dotenv';
+import MainContract from "./MainContract.js";
+import web3 from "./web3.js";
+
+const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
+web3.eth.accounts.wallet.add(signer);
+const address = signer.address;
+
+config({ path: '../.env' });
+
 const main = async () => {
 
     const data2 = await getOwner();
@@ -17,8 +27,14 @@ const main = async () => {
         password: 'a',
         cpassword: 'a' 
     };
+    console.log(`print 1`);
+    console.log(body)
+    const data3 = await MainContract.methods.registerApplicant(body.email, body.name, body.password).send({ from: address, gas: "300000" });
+    console.log(`print 1.2`);
+    console.log(data3)
     const data1 = await signup(body);
+    console.log(`print 2`);
     console.log(data1);
-        process.exit();
+    process.exit();
 }
 main();
