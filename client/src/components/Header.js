@@ -33,7 +33,7 @@ const Header = () => {
         <Link to="/verify_certificate" className="item">
           Verify Certificate
         </Link>
-        <Link to="/" className="item">
+        <Link to="/" className="item" onClick={() => {}}>
           Sign Out
         </Link>
       </div>

@@ -7,27 +7,26 @@ const PassportCertificateForm = () => {
       <input type="text" required />
       <br />
       <br />
-      <label>Guardian's Name:</label>
+      <label>Father's Name:</label>
       <input type="text" required />
       <br />
       <br />
-      <label>Hospital:</label>
+      <label>Mother's Name:</label>
       <input type="text" required />
+      <br />
+      <br />
+      <label>Address:</label>
+      <input type="text" required />
+      <br />
+      <br />
+      <label for="phone">Contact Number:</label>
+      <input type="tel" pattern="[0-9]{10}" required />
       <br />
       <br />
       <label>Date of Birth:</label>
       <input type="date" required />
       <br />
       <br />
-      <label>Time of Birth:</label>
-      <input type="time" required />
-      <br />
-      <br />
-      <label>Location:</label>
-      <input type="text" required />
-      <br />
-      <br />
-      <input type="submit" className="ui button primary" value="Create" />
     </>
   )
 }
