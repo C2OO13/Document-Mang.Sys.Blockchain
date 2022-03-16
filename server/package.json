@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.js"
+    "start": "nodemon -r dotenv/config index.js",
+    "ipfs": "jsipfs daemon",
+    "dev": "concurrently --kill-others \"npm run start\" \"npm run ipfs\""
   },
   "keywords": [],
   "author": "",
@@ -13,15 +15,18 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
+    "concurrently": "^7.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "fs-extra": "^10.0.1",
     "http-status-codes": "^2.2.0",
+    "ipfs": "^0.62.1",
     "ipfs-core": "^0.14.1",
     "ipfs-http-client": "^56.0.1",
     "mongoose": "^6.2.6",
+    "multer": "^1.4.4",
     "node-fetch": "^2.6.7",
     "nodemon": "^2.0.15",
     "npm": "^8.5.4",
