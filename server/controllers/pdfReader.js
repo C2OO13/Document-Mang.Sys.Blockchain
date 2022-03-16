@@ -3,11 +3,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { writeFile } from 'fs';
-import { verifyBirthCertOne } from './birthcert.js';
+// import { verifyBirthCertOne } from './birthcert.js';
 
 let rows = {};
 let data = [];
-
+/*
 const f = (fileName) => {
     const pr = new pdfreader.PdfReader();
     const __filename = fileURLToPath(import.meta.url);
@@ -87,3 +87,4 @@ const getDataFromPDF = async (req, res) => {
 };
 
 export default getDataFromPDF;
+*/

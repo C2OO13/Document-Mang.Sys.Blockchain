@@ -1,12 +1,16 @@
 import express from "express";
-import { getBirthCert, createBirthCert } from '../controllers/birthcert.js'
-import getDataFromPDF from "../controllers/pdfReader.js";
+// import { getBirthCert, createBirthCert } from '../controllers/birthcert.js'
+// import getDataFromPDF from "../controllers/pdfReader.js";
+
+import { approveAadharCard, approveBirthCerti, approvePassportCerti, checkIfSharedCerti, getAadharCard, getBirthCerti, getCountPendingAadharCard, getCountPendingBirthCerti, getCountPendingPassportCerti, getOwner, getPassportCerti, newAadharCard, newBirthCerti, newPassportCerti, rejectAadharCard, rejectBirthCerti, rejectPassportCerti, setAadharCard, setBirthCerti, setPassportCerti, shareCerti } from '../blockchain/methods.js'
 
 const router = express.Router();
 
 // router.get('/api/get_certificate', getBirthCert);
 // router.post('/api/create_certificate', createBirthCert);
 // router.post('/api/verify_pdf', getDataFromPDF);
+
+router.get('/api/get_owner', getOwner);
 
 router.post('/api/new_birth_certi', newBirthCerti);
 router.patch('/api/set_birth_certi', setBirthCerti);

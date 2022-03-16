@@ -3,9 +3,6 @@ config({ path: '../.env' });
 import MainContract from "./MainContract.js";
 import web3 from "./web3.js";
 
-// const accounts = await web3.eth.getAccounts();
-// const address = accounts[0];        
-
 const signer = web3.eth.accounts.privateKeyToAccount(process.env.SIGNER_PRIVATE_KEY);
 web3.eth.accounts.wallet.add(signer);
 const address = signer.address;
@@ -304,6 +301,7 @@ export const getOwner = async () => {
     }
 }
 
+/*
 export const newCertificate = async (acc, hash, desc) => {
     try {
 
@@ -362,3 +360,4 @@ export const setActive = async (id, state) => {
         return error.message;
     }
 }
+*/

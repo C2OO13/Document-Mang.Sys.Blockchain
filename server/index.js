@@ -8,7 +8,7 @@ import { ensureAuthenticated, forwardAuthenticated } from './middlewares/auth/pa
 import routes from './routes/index.js'
 // import errorHandler from '../middlewares/errorHandler'     
 // import mongoose from "mongoose";
-// import birthCertRoutes from './routes/birthcert.js';
+import birthCertRoutes from './routes/birthcert.js';
 
 // Configure .env file, for environment variables
 config({ path: './.env' });
@@ -50,11 +50,12 @@ app.use('/', routes)
 
 // Initial Page
 app.get('/', (req, res) => {
-    // res.render()
+    res.render("Hello BBDMS")
 });
 
-/*
 app.use('/', birthCertRoutes);
+
+/*
 
 mongoose.connect(process.env.CONNECTION_URL, {
     useNewUrlParser: true,
