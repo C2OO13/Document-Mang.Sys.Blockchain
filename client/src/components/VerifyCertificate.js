@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+
 import axios from '../api'
 
 const VerifyCertificate = () => {
@@ -10,6 +12,20 @@ const VerifyCertificate = () => {
   //     reader.onerror = (error) => reject(error)
   //   })
   // }
+
+  const history = useHistory()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await axios.get('/check-auth')
+      if (!data.isAuthenticated) {
+        history.push('/')
+      }
+    }
+
+    checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault()

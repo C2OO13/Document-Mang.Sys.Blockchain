@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import downloadjs from 'downloadjs'
 import axios from '../api'
@@ -8,6 +9,20 @@ import PassportCertificateForm from './forms/PassportCertificateForm'
 
 const CreateCertificate = () => {
   const [certificate, setCertificate] = useState(null)
+
+  const history = useHistory()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await axios.get('/check-auth')
+      if (!data.isAuthenticated) {
+        history.push('/')
+      }
+    }
+
+    checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
