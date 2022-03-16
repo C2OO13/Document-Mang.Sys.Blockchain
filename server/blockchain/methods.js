@@ -503,6 +503,7 @@ export const isApplicant = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
+        console.log('=====================================', req.body);
         const data = await MainContract.methods
             .login(req.body.accName, req.body.password)
             .call();

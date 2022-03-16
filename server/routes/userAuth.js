@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { authenticate } from 'passport';
+// import { authenticate } from 'passport';
 import { forwardAuthenticated } from '../middlewares/auth/passportAuth.js';
 
 import { login, signup, checkAuth, logout, } from '../controllers/userAuth.js';
@@ -13,10 +13,11 @@ router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 // Register Page
 router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
 
-router.post('/login', login);
+router.post('/login', passportStrategy, login);
 // router.post('/signup', signupErrorHandler, signup);
-router.post('/signup', signup);
-router.get('/check-auth', passportStrategy, checkAuth);
+router.post('/signup', passportStrategy, signup);
+router.get('/check-auth', checkAuth);
 router.get('/logout', passportStrategy, logout);
 
-module.exports = router;
+// module.exports = router;
+export default router;

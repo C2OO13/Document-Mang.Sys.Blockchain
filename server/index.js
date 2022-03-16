@@ -10,7 +10,8 @@ import routes from './routes/index.js';
 // import errorHandler from '../middlewares/errorHandler'     
 // import mongoose from "mongoose";
 import birthCertRoutes from './routes/birthcert.js';
-
+import loginroutes from './routes/userAuth.js';
+import flash from 'express-flash'
 // Configure .env file, for environment variables
 config({ path: './.env' });
 
@@ -35,19 +36,20 @@ app.use(cors());
 // Start Session
 app.use(
     session({
-      secret: 'secret',
-      resave: true,
-      saveUninitialized: true
+        secret: 'secret',
+        resave: true,
+        saveUninitialized: true
     })
-  );
-  
+);
+
 // Authentication Middleware
 import './middlewares/auth/passportStrategy.js'
 app.use(passport.initialize());
 app.use(passport.session());
-  
+app.use(flash())
 // Routes
 app.use('/', routes)
+app.use('/', loginroutes)
 
 // Initial Page
 app.get('/', (req, res) => {

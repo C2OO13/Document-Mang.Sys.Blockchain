@@ -5,10 +5,11 @@ export const ensureAuthenticated = (req, res, next) => {
     return next();
   }
   // Send Error Message
-  return res
+  res
     .status(StatusCodes.CONFLICT)
     .json({ error: `Please Login To See The Resource!!!`});
-  res.redirect('/users/login');
+  console.log("ensure authen". req.body)
+  res.redirect('/api/login');
 };
 
 export const forwardAuthenticated = (req, res, next) => {
