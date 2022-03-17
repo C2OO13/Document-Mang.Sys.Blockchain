@@ -1,5 +1,5 @@
 import BirthCert from '../models/BirthCert.js';
-import { getCertificate, newCertificate } from '../blockchain/methods.js';
+// import { getCertificate, newCertificate } from '../blockchain/methods.js';
 import { getHash } from '../helper/getHash.js';
 
 /*import fs from 'fs'
@@ -7,7 +7,7 @@ import path from 'path'
 import {create} from 'ipfs-http-client'
 
 const ipfs = create()*/
-
+/*
 export const verifyBirthCertOne = async (data) => {
     console.log("Mydata", data);
     try {
@@ -68,5 +68,6 @@ export const createBirthCert = async (req, res) => {
     console.log(cid)
     
     "https://ipfs.io/ipfs/"+cid
-    */
+    
 };
+*/

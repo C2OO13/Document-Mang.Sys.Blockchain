@@ -1,17 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { forwardAuthenticated } = require('../middlewares/passportAuth');
+import { authenticate } from 'passport';
+import { forwardAuthenticated } from '../middlewares/auth/passportAuth.js';
 
-const {
-  login,
-  signup,
-  checkAuth,
-  logout,
-} = require('../controllers/userAuth');
-const passportStrategy = require('../middlewares/auth/passportStrategy');
-const {
-  signupErrorHandler,
-} = require('../middlewares/errorHandler/authErrorHandler');
+import { login, signup, checkAuth, logout, } from '../controllers/userAuth.js';
+import { passportStrategy } from '../middlewares/auth/passportStrategy.js';
+// import { signupErrorHandler } from '../middlewares/errorHandler/authErrorHandler.js';
 
 // Login Page
 router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
@@ -20,7 +14,8 @@ router.get('/login', forwardAuthenticated, (req, res) => res.render('login'));
 router.get('/register', forwardAuthenticated, (req, res) => res.render('register'));
 
 router.post('/login', login);
-router.post('/signup', signupErrorHandler, signup);
+// router.post('/signup', signupErrorHandler, signup);
+router.post('/signup', signup);
 router.get('/check-auth', passportStrategy, checkAuth);
 router.get('/logout', passportStrategy, logout);
 

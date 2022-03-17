@@ -3,12 +3,13 @@ import bodyParser from "body-parser";
 import cors from 'cors';
 import express from 'express';
 import passport from 'passport';
-import session from 'express-session'
+import passportLocal from 'passport-local';
+import session from 'express-session';
 import { ensureAuthenticated, forwardAuthenticated } from './middlewares/auth/passportAuth.js';
-import routes from './routes/index.js'
+import routes from './routes/index.js';
 // import errorHandler from '../middlewares/errorHandler'     
 // import mongoose from "mongoose";
-// import birthCertRoutes from './routes/birthcert.js';
+import birthCertRoutes from './routes/birthcert.js';
 
 // Configure .env file, for environment variables
 config({ path: './.env' });
@@ -17,7 +18,6 @@ config({ path: './.env' });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// What???
 app.use(bodyParser.json({
     limit: "30mb",
     extended: true
@@ -27,11 +27,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(cors());
-/*
-// ErrorHandler middleware
-app.use(errorHandler.notFound);
-app.use(errorHandler.errorHandler);
-*/
+
+// // ErrorHandler middleware
+// app.use(errorHandler.notFound);
+// app.use(errorHandler.errorHandler);
+
 // Start Session
 app.use(
     session({
@@ -42,6 +42,7 @@ app.use(
   );
   
 // Authentication Middleware
+import './middlewares/auth/passportStrategy.js'
 app.use(passport.initialize());
 app.use(passport.session());
   
@@ -50,11 +51,12 @@ app.use('/', routes)
 
 // Initial Page
 app.get('/', (req, res) => {
-    // res.render()
+    res.send("Hello BBDMS")
 });
 
-/*
 app.use('/', birthCertRoutes);
+
+/*
 
 mongoose.connect(process.env.CONNECTION_URL, {
     useNewUrlParser: true,
