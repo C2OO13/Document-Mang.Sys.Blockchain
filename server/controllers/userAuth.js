@@ -78,22 +78,6 @@ export const signup = async (req, res) => {
   }
 };
 
-// Login
-// router.post('/login', (req, res, next) => {
-//   passport.authenticate('local', {
-//     successRedirect: '/dashboard',
-//     failureRedirect: '/users/login',
-//     failureFlash: true
-//   })(req, res, next);
-// });
-
-// Logout
-// router.get('/logout', (req, res) => {
-//   req.logout();
-//   req.flash('success_msg', 'You are logged out');
-//   res.redirect('/users/login');
-// });
-
 export const logout = async (req, res) => {
   req.logOut();
   req.flash('success_msg', 'You are logged out');
@@ -124,20 +108,3 @@ export const checkAuth = async (req, res) => {
   // res.status(StatusCodes.OK).json({ data: req.user });
 };
 
-
-/*
-// Login User
-
-/**
- * @desc    logout user
- * @route   get /api/users/auth/logout
- * @access  private
- 
-
-/**
- * @desc    To check authentication status
- * @route   GET /api/users/auth/check-auth
- * @access  private
- 
-
-// module.exports = { signup, login, checkAuth, logout };*/
