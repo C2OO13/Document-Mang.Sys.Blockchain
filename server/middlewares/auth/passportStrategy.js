@@ -14,43 +14,65 @@ import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import { StatusCodes } from 'http-status-codes';
 import passportLocal from 'passport-local';
-// import LocalStrategy from 'passport-local'.Strategy;
+import LocalStrategy from 'passport-local'
 
-passport.use( new passportLocal.Strategy({ usernameField: 'accName' }, async (accName, password, done) => {
-    // Check for exisiting user
-    try {
-      const data = await MainContract.methods.isApplicant(accName).call();
-      if (!data) {
-      return done(null, false, { message: 'This Email is not Registered!!!' });
-    }
-    else {
-      // Match password
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, (err, hash) => {
-          if (err) throw err;
-          const pwd = hash;
-          const user =  MainContract.methods.login(email, pwd).send({ from: address, gas: "300000" });
-          if(MainContract.methods.isApplicant(user).call()) {
+export const passportStrategy = async( req, res, next)=> {
+    // const accName = req.body.accName;
+    // const password = req.body.password;
+    
+    console.log("asdsdasdasd" , req.body);
+    passport.use( new passportLocal.Strategy({ usernameField: 'accName' }, async (accName, password, done) => {
+        // Check for exisiting user
+      console.log("asdasdasdasdasdsdasdas")
+        console.log(accName)
+      console.log(password)
+        try {
+          const data = await MainContract.methods.isApplicant(accName).call();
+          console.log("Data here", data);
+          if (data == false) {
+          return done(null, false, { message: 'This Email is not Registered!!!' });
+        }
+        else {
+
+          const user =  await MainContract.methods.login(accName, password).call();
+          console.log('User here', user)  
+          if(user == true) {
             return done(null, user);
           } 
           else {
             return done(null, false, { message: 'Password is not Correct!!!' });
           }
-        });
+
+          {
+          // Match password
+          // bcrypt.genSalt(10, (err, salt) => {
+          //   bcrypt.hash(password, salt, (err, hash) => {
+          //     if (err) throw err;
+          //     const pwd = hash;
+          //     const user =  await MainContract.methods.login(email, pwd).send({ from: address, gas: "300000" });
+          //     if(MainContract.methods.isApplicant(user).call()) {
+          //       return done(null, user);
+          //     } 
+          //     else {
+          //       return done(null, false, { message: 'Password is not Correct!!!' });
+          //     }
+          //   });
+          // });
+          }
+        };
+      }
+      catch (error) {
+        done(error)
+      }
+    }));
+
+    passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+
+    passport.deserializeUser(function(id, done) {
+      User.findById(id, function(err, user) {
+        done(null, user);
       });
-    };
-  }
-  catch (error) {
-    done(error)
-  }
-}));
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
 });
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(null, user);
-  });
-});
+}
