@@ -32,7 +32,7 @@ export const verifyCerti = async (req, res) => {
             case 1: {
                 inputData = birthRead(link);
                 storedData = await MainContract.methods
-                    .getBirthCerti(email)
+                    .getBirthCertificate(email)
                     .call();
                 storedData = birthRead(storedData[2])
                 break;
@@ -48,7 +48,7 @@ export const verifyCerti = async (req, res) => {
             case 3: {
                 inputData = passportRead(link);
                 storedData = await MainContract.methods
-                    .getPassportCerti(email)
+                    .getPassportCertificate(email)
                     .call();
                 storedData = passportRead(storedData[2])
                 break;
@@ -70,13 +70,13 @@ export const verifyCerti = async (req, res) => {
     }
 }
 
-export const newBirthCerti = async (req, res) => {
+export const newBirthCertificate = async (req, res) => {
     try {
         var data = req.body;
         await birthCreate(data);
         const link = await getIpfsLink(data.email);
         await MainContract.methods
-            .newBirthCerti(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
+            .newBirthCertificate(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -87,13 +87,13 @@ export const newBirthCerti = async (req, res) => {
     }
 }
 
-export const setBirthCerti = async (req, res) => {
+export const setBirthCertificate = async (req, res) => {
     try {
         var data = req.body;
         await birthCreate(data);
         const link = await getIpfsLink(data.email);
         await MainContract.methods
-            .setBirthCerti(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
+            .setBirthCertificate(req.body.email, req.body.childName, req.body.dateOfBirth, link, "")
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -104,10 +104,10 @@ export const setBirthCerti = async (req, res) => {
     }
 }
 
-export const approveBirthCerti = async (req, res) => {
+export const approveBirthCertificate = async (req, res) => {
     try {
         await MainContract.methods
-            .approveBirthCerti(req.body.email)
+            .approveBirthCertificate(req.body.email)
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -120,10 +120,10 @@ export const approveBirthCerti = async (req, res) => {
 
 
 
-export const rejectBirthCerti = async (req, res) => {
+export const rejectBirthCertificate = async (req, res) => {
     try {
         await MainContract.methods
-            .rejectBirthCerti(req.body.email)
+            .rejectBirthCertificate(req.body.email)
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -136,10 +136,10 @@ export const rejectBirthCerti = async (req, res) => {
 //req.file.buffer ma file avse
 // req.body.type
 
-export const getTopBirthCerti = async (req, res) => {
+export const getTopBirthCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .topBirthCerti()
+            .topBirthCertificate()
             .call();
 
         return res.send(JSON.stringify(data));
@@ -150,10 +150,10 @@ export const getTopBirthCerti = async (req, res) => {
     }
 }
 
-export const getBirthCerti = async (req, res) => {
+export const getBirthCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .getBirthCerti(req.body.email)
+            .getBirthCertificate(req.body.email)
             .call();
 
         return res.send(JSON.stringify(data));
@@ -164,10 +164,24 @@ export const getBirthCerti = async (req, res) => {
     }
 }
 
-export const getCountPendingBirthCerti = async (req, res) => {
+export const getCountPendingBirthCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .getCountPendingBirthCerti()
+            .getCountPendingBirthCertificate()
+            .call();
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
+export const getAllPendingBirthCertificates = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getAllPendingBirthCertificates()
             .call();
 
         return res.send(JSON.stringify(data));
@@ -283,6 +297,20 @@ export const getCountPendingAadharCard = async (req, res) => {
     }
 }
 
+export const getAllPendingAadharCards = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getAllPendingAadharCards()
+            .call();
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
 export const shareCerti = async (req, res) => {
     try {
         await MainContract.methods
@@ -297,10 +325,10 @@ export const shareCerti = async (req, res) => {
     }
 }
 
-export const checkIfSharedCerti = async (req, res) => {
+export const getSharedCertis = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .checkIfSharedCerti(req.body.email, req.body.toShareEmail, req.body.type)
+            .getSharedCertis(req.body.accName)
             .call();
 
         return res.send(JSON.stringify(data));
@@ -311,13 +339,13 @@ export const checkIfSharedCerti = async (req, res) => {
     }
 }
 
-export const newPassportCerti = async (req, res) => {
+export const newPassportCertificate = async (req, res) => {
     try {
         var data = req.body;
         await passportCreate(data);
         const link = await getIpfsLink(data.email);
         await MainContract.methods
-            .newPassportCerti(req.body.email, req.body.applicantName, req.body.dateOfBirth, link, '')
+            .newPassportCertificate(req.body.email, req.body.applicantName, req.body.dateOfBirth, link, '')
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -328,13 +356,13 @@ export const newPassportCerti = async (req, res) => {
     }
 }
 
-export const setPassportCerti = async (req, res) => {
+export const setPassportCertificate = async (req, res) => {
     try {
         var data = req.body;
         await passportCreate(data);
         const link = await getIpfsLink(data.email);
         await MainContract.methods
-            .setPassportCerti(req.body.email, req.body.applicantName, req.body.dateOfBirth, link, '')
+            .setPassportCertificate(req.body.email, req.body.applicantName, req.body.dateOfBirth, link, '')
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -345,10 +373,10 @@ export const setPassportCerti = async (req, res) => {
     }
 }
 
-export const approvePassportCerti = async (req, res) => {
+export const approvePassportCertificate = async (req, res) => {
     try {
         await MainContract.methods
-            .approvePassportCerti(req.body.email)
+            .approvePassportCertificate(req.body.email)
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -359,10 +387,10 @@ export const approvePassportCerti = async (req, res) => {
     }
 }
 
-export const getTopPassportCerti = async (req, res) => {
+export const getTopPassportCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .topPassportCerti()
+            .topPassportCertificate()
             .call();
 
         return res.send(JSON.stringify(data));
@@ -373,10 +401,10 @@ export const getTopPassportCerti = async (req, res) => {
     }
 }
 
-export const rejectPassportCerti = async (req, res) => {
+export const rejectPassportCertificate = async (req, res) => {
     try {
         await MainContract.methods
-            .rejectPassportCerti(req.body.acc)
+            .rejectPassportCertificate(req.body.acc)
             .send({ from: address, gas: "300000" });
 
         return res.send(JSON.stringify(true));
@@ -387,10 +415,10 @@ export const rejectPassportCerti = async (req, res) => {
     }
 }
 
-export const getPassportCerti = async (req, res) => {
+export const getPassportCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .getPassportCerti(req.body.acc)
+            .getPassportCertificate(req.body.acc)
             .call();
 
         return res.send(JSON.stringify(data));
@@ -401,10 +429,24 @@ export const getPassportCerti = async (req, res) => {
     }
 }
 
-export const getCountPendingPassportCerti = async (req, res) => {
+export const getCountPendingPassportCertificate = async (req, res) => {
     try {
         const data = await MainContract.methods
-            .getCountPendingPassportCerti()
+            .getCountPendingPassportCertificate()
+            .call();
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
+export const getAllPendingPassportCertificates = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getAllPendingPassportCertificates()
             .call();
 
         return res.send(JSON.stringify(data));
@@ -434,6 +476,34 @@ export const getUser = async (req, res) => {
     try {
         const data = await MainContract.methods
             .getUser(req.body.accName)
+            .call();
+        // console.log(data);
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const getApprovers = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getApprovers()
+            .call();
+        // console.log(data);
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        res.send(error.message);
+    }
+}
+
+export const getAdmins = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getAdmins()
             .call();
         // console.log(data);
         return res.send(JSON.stringify(data));
@@ -570,6 +640,35 @@ export const changePassword = async (req, res) => {
         return res.send(false);
     }
 }
+
+export const addNotification = async (req, res) => {
+    try {
+        await MainContract.methods
+            .addNotification(req.body.accName, req.body.message, req.body.redirectLink)
+            .send({ from: address, gas: "300000" });
+
+        return res.send(JSON.stringify(true));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(false);
+    }
+}
+
+export const getUserNotifications = async (req, res) => {
+    try {
+        const data = await MainContract.methods
+            .getUserNotifications(req.body.accountName)
+            .call();
+
+        return res.send(JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+        return res.send(error.message);
+    }
+}
+
 /*
 export const newCertificate = async (acc, hash, desc) => {
     try {
