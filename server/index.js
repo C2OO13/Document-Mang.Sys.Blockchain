@@ -5,12 +5,12 @@ import express from 'express'
 import passport from 'passport'
 import session from 'express-session'
 import certiRoutes from './routes/certis.js'
-import loginroutes from './routes/userAuth.js'
-import './middlewares/auth/passportStrategy.js'
+import { getUserByEmail } from './blockchain/methods'
+
 config({ path: './.env' })
 
-import initializePassport from './middlewares/auth/passportStrategy'
-initializePassport(passport)
+import initializePassport from './authentication/passport-config'
+initializePassport(passport, getUserByEmail)
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -42,7 +42,6 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // Routes
-app.use('/', loginroutes)
 app.use('/', certiRoutes)
 
 app.listen(PORT, () => {

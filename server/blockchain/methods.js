@@ -462,6 +462,11 @@ export const getOwner = async (req, res) => {
   }
 }
 
+export const getUserByEmail = async (email) => {
+  const user = await MainContract.methods.getUser(email).call()
+  return user
+}
+
 export const getUser = async (req, res) => {
   try {
     const data = await MainContract.methods.getUser(req.body.accName).call()
@@ -540,17 +545,9 @@ export const isApplicant = async (req, res) => {
   }
 }
 
-export const login = async (req, res) => {
-  try {
-    console.log('=====================================', req.body)
-    const data = await MainContract.methods
-      .login(req.body.accName, req.body.password)
-      .call()
-    return res.send(JSON.stringify(data))
-  } catch (error) {
-    console.log(error)
-    res.send(error.message)
-  }
+export const login = async (email, password) => {
+  const data = await MainContract.methods.login(email, password).call()
+  return data
 }
 
 export const registerApplicant = async (req, res) => {
@@ -642,9 +639,16 @@ export const getUserNotifications = async (req, res) => {
   }
 }
 
-export const logout = async (req, res) => {}
+export const logout = async (req, res) => {
+  req.logOut()
+  res.redirect('/')
+}
 
-export const check_auth = async (req, res) => {}
+export const check_auth = async (req, res) => {
+  res.send({
+    isAuthenticated: req.isAuthenticated(),
+  })
+}
 
 /*
 export const newCertificate = async (acc, hash, desc) => {

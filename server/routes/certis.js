@@ -1,4 +1,5 @@
 import express from 'express'
+import passport from 'passport'
 import {
   approveAadharCard,
   approveBirthCertificate,
@@ -22,7 +23,6 @@ import {
   isAdmin,
   isApplicant,
   isApprover,
-  login,
   newAadharCard,
   newBirthCertificate,
   newPassportCertificate,
@@ -54,12 +54,18 @@ router.get('/api/get_user', getUser)
 router.get('/api/get_approvers', getApprovers)
 router.get('/api/get_admins', getAdmins)
 router.get('/api/get_id', getId)
-router.get('/api/login', login)
+router.post(
+  '/api/login',
+  passport.authenticate('local', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
+  })
+)
 router.post('/api/register_applicant', registerApplicant)
 router.post('/api/register_approver', registerApprover)
 router.post('/api/register_admin', registerAdmin)
 router.get('/api/check_auth', check_auth)
-router.get('/api/logout', logout)
+router.delete('/api/logout', logout)
 router.get('/api/is_applicant', isApplicant)
 router.get('/api/is_approver', isApprover)
 router.get('/api/is_admin', isAdmin)
