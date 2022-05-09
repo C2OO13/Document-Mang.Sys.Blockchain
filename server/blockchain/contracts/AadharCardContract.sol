@@ -8,15 +8,15 @@ contract AadharCardContract {
         string number;
         string ipfsHash;
         string description;
-        uint id;
+        string accName;
         uint state; // 0=Requested Approval / 1= WIP / 2= Approved / 3= Denied
     }
 
-    mapping (uint => AadharCard) private aadharCards;
+    mapping (string => AadharCard) private aadharCards;
 
     struct AadharCardQueue{
         uint state;
-        uint id;
+        string accName;
     }
     
     mapping(uint => AadharCardQueue) private queueAadharCard;
@@ -33,11 +33,6 @@ contract AadharCardContract {
         queueAadharCard[lastAadharCard] = data;
     }
 
-    function topAadharCard() internal view returns (AadharCardQueue memory data) {
-        require(lastAadharCard >= firstAadharCard); 
-        data = queueAadharCard[firstAadharCard];
-    }
-
     function dequeueAadharCard() internal returns (AadharCardQueue memory data) {
         require(lastAadharCard >= firstAadharCard); 
         data = queueAadharCard[firstAadharCard];
@@ -45,51 +40,81 @@ contract AadharCardContract {
         firstAadharCard += 1;
     }
 
-    function getCountOfPendingAadharCard() internal view returns(uint){
+    function getCountOfPendingAadharCard() public view returns(uint){
         return ((lastAadharCard + 1) - firstAadharCard);
     }
 
-    function newAadharCard(uint id, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) internal returns(AadharCard memory){
+    function newAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public {
         AadharCard memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.number = _number;
         c.state = 0;
-        c.id = id;
-        aadharCards[id] = c;
-        return c;
+        c.accName = accName;
+        aadharCards[accName] = c;
+        AadharCardQueue memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueueAadharCard(b);
     }
 
-    function setAadharCard(uint id, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) internal returns(AadharCard memory){
+    function setAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public{
         AadharCard memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.number = _number;
         c.state = 0;
-        c.id = id;
-        aadharCards[id] = c;
-        return c;
+        c.accName = accName;
+        aadharCards[accName] = c;
+        AadharCardQueue memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueueAadharCard(b);
     }
 
-    function approveAadharCard(uint id) internal returns (AadharCard memory){
-        AadharCard memory c = aadharCards[id];
-        if(c.state != 0) return c;
+    function approveAadharCard(string memory accName) public {
+        AadharCard memory c = aadharCards[accName];
+        if(c.state != 0) return;
         c.state = 2;
-        aadharCards[id] = c;
-        return c;
+        aadharCards[accName] = c;
+        updateAadharQueue();
     }
     
-    function rejectAadharCard(uint id) internal returns (AadharCard memory){
-        AadharCard memory c = aadharCards[id];
-        if(c.state == 3) return c;
+    function rejectAadharCard(string memory accName) public {
+        AadharCard memory c = aadharCards[accName];
+        if(c.state == 3) return;
         c.state = 3;
-        aadharCards[id] = c;
-        return c;
+        aadharCards[accName] = c;
+        updateAadharQueue();
     }
 
-    function getAadharCard(uint id) internal view returns (AadharCard memory) {
-        return aadharCards[id];
+    function getAadharCard(string memory accName) public view returns (AadharCard memory) {
+        return aadharCards[accName];
+    }
+
+    function updateAadharQueue() private{
+        require(lastAadharCard >= firstAadharCard); 
+        uint i=firstAadharCard;
+        while(i<=lastAadharCard && getAadharCard(queueAadharCard[i++].accName).state != 0){
+            AadharCard memory temp = getAadharCard(queueAadharCard[i++].accName); 
+            if(temp.state != 0) dequeueAadharCard();
+            else return;
+        }
+    }
+
+    function getAllPendingAadharCards() public view returns(AadharCard[] memory b){
+        require(lastAadharCard >= firstAadharCard, "No pending aadhar cards"); 
+        uint i=firstAadharCard;
+        uint j=lastAadharCard-firstAadharCard;
+        b = new AadharCard[](j+1);
+        j=0;
+        AadharCard memory temp;
+        while(i<=lastAadharCard){
+            AadharCardQueue memory c = queueAadharCard[i++];
+            temp = getAadharCard(c.accName);
+            if(temp.state == 0) b[j++] = temp;
+        }
     }
 }

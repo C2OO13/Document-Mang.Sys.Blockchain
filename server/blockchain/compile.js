@@ -11,6 +11,7 @@ const contracts = [
     'BirthCertiContract.sol',
     'ShareCertificateContract.sol',
     'PassportCertiContract.sol',
+    'NotificationContract.sol',
     'Dashboard.sol'
 ];
 const paths = [];
@@ -39,8 +40,11 @@ const input = {
         'PassportCertiContract.sol': {
             content: sources[4],
         },
-        'Dashboard.sol': {
+        'NotificationContract.sol': {
             content: sources[5],
+        },
+        'Dashboard.sol': {
+            content: sources[6],
         },
     },
     settings: {

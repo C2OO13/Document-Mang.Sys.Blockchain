@@ -8,15 +8,15 @@ contract BirthCertiContract {
         string dob;
         string ipfsHash;
         string description;
-        uint id;
+        string accName;
         uint state; // 0=Requested Approval / 1= WIP / 2= Approved / 3= Denied
     }
 
-    mapping (uint => BirthCertificate) private birthCertificates;
+    mapping (string => BirthCertificate) private birthCertificates;
 
     struct BirthCerti{
         uint state;
-        uint id;
+        string accName;
     }
     
     mapping(uint => BirthCerti) private queueBirthCertificate;
@@ -33,11 +33,6 @@ contract BirthCertiContract {
         queueBirthCertificate[lastBirthCertificate] = data;
     }
 
-    function topBirthCertificate() internal view returns (BirthCerti memory data) {
-        require(lastBirthCertificate >= firstBirthCertificate); 
-        data = queueBirthCertificate[firstBirthCertificate];
-    }
-
     function dequeueBirthCertificate() internal returns (BirthCerti memory data) {
         require(lastBirthCertificate >= firstBirthCertificate); 
         data = queueBirthCertificate[firstBirthCertificate];
@@ -45,51 +40,82 @@ contract BirthCertiContract {
         firstBirthCertificate += 1;
     }
 
-    function getCountOfPendingBirthCertificate() internal view returns(uint){
+    function getCountOfPendingBirthCertificate() public view returns(uint){
         return ((lastBirthCertificate + 1) - firstBirthCertificate);
     }
 
-    function newBirthCertificate(uint id, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) internal returns(BirthCertificate memory){
+    function newBirthCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
         BirthCertificate memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.dob = _dob;
         c.state = 0;
-        c.id = id;
-        birthCertificates[id] = c;
-        return c;
+        c.accName = accName;
+        birthCertificates[accName] = c;
+        BirthCerti memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueueBirthCertificate(b);
     }
 
-    function setBirthCertificate(uint id, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) internal returns(BirthCertificate memory){
+    function setBirthCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
         BirthCertificate memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.dob = _dob;
         c.state = 0;
-        c.id = id;
-        birthCertificates[id] = c;
-        return c;
+        c.accName = accName;
+        birthCertificates[accName] = c;
+        BirthCerti memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueueBirthCertificate(b);
     }
 
-    function approveBirthCertificate(uint id) internal returns (BirthCertificate memory){
-        BirthCertificate memory c = birthCertificates[id];
-        if(c.state != 0) return c;
+    function approveBirthCertificate(string memory accName) public {
+        BirthCertificate memory c = birthCertificates[accName];
+        if(c.state != 0) return;
         c.state = 2;
-        birthCertificates[id] = c;
-        return c;
+        birthCertificates[accName] = c;
+        updateBirthQueue();
     }
     
-    function rejectBirthCertificate(uint id) internal returns (BirthCertificate memory){
-        BirthCertificate memory c = birthCertificates[id];
-        if(c.state == 3) return c;
+    function rejectBirthCertificate(string memory accName) public {
+        BirthCertificate memory c = birthCertificates[accName];
+        if(c.state == 3) return;
         c.state = 3;
-        birthCertificates[id] = c;
-        return c;
+        birthCertificates[accName] = c;
+        updateBirthQueue();
     }
 
-    function getBirthCertificate(uint id) internal view returns (BirthCertificate memory) {
-        return birthCertificates[id];
+    function getBirthCertificate(string memory accName) public view returns (BirthCertificate memory) {
+        return birthCertificates[accName];
     }
+
+    function updateBirthQueue() private{
+        require(lastBirthCertificate >= firstBirthCertificate); 
+        uint i=firstBirthCertificate;
+        while(i<=lastBirthCertificate){
+            BirthCertificate memory temp = getBirthCertificate(queueBirthCertificate[i++].accName); 
+            if(temp.state != 0) dequeueBirthCertificate();
+            else return;
+        }
+    }
+    
+    function getAllPendingBirthCertificates() public view returns(BirthCertificate[] memory b){
+        require(lastBirthCertificate >= firstBirthCertificate, "No pending birth certis"); 
+        uint i=firstBirthCertificate;
+        uint j=lastBirthCertificate-firstBirthCertificate;
+        b = new BirthCertificate[](j+1);
+        j=0;
+        BirthCertificate memory temp;
+        while(i<=lastBirthCertificate){
+            BirthCerti memory c = queueBirthCertificate[i++];
+            temp = getBirthCertificate(c.accName);
+            if(temp.state == 0) b[j++] = temp;
+        }
+    }
+
 }

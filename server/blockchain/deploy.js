@@ -22,7 +22,8 @@ async function deploy(web3, signer) {
         const deployedContract = await deployTx
             .send({
                 from: signer.address,
-                gas: '12500000',
+                gasPrice: 20e9,
+                gas: 25e6,
             })
             .once('transactionHash', txhash => {
                 console.log(`Mining deployment transaction ...`);

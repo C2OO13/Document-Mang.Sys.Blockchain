@@ -12,6 +12,8 @@ contract Login {
     }   
 
     uint private lastId;
+    User[] internal approvers;
+    User[] internal admins;
     mapping(uint => User) internal userId_user;
     mapping(string => uint) internal accountName_userId;
 
@@ -24,7 +26,7 @@ contract Login {
         return false;
     }
 
-    function signUpApplicant(string memory _accountName, string memory _name, string memory _password) internal returns(uint) {
+    function registerApplicant(string memory _accountName, string memory _name, string memory _password) public returns(uint) {
         require(checkUniqueAccountName(_accountName) == false, "Account Name already in use! Try another one");
         User memory u;
         lastId += 1;
@@ -49,6 +51,7 @@ contract Login {
         u.password = _password;
         accountName_userId[_accountName] = lastId;
         userId_user[lastId] = u;
+        approvers.push(u);
         return lastId;
     }
 
@@ -63,6 +66,7 @@ contract Login {
         u.password = _password;
         accountName_userId[_accountName] = lastId;
         userId_user[lastId] = u;
+        admins.push(u);
         return lastId;
     }
 
@@ -75,7 +79,7 @@ contract Login {
         return 0;
     }
 
-    function changePwd(string memory _accountName, string memory _password, string memory _newPassword) internal returns(bool){
+    function changePassword(string memory _accountName, string memory _password, string memory _newPassword) public returns(bool){
         uint userId = accountName_userId[_accountName];
         User memory u = userId_user[userId];
         if (keccak256(bytes(u.password)) == keccak256(bytes(_password))) {
@@ -85,4 +89,11 @@ contract Login {
         return false;
     }
 
+    function getApprovers() public view returns(User[] memory u){
+        u = approvers;
+    }
+
+    function getAdmins() public view returns(User[] memory u){
+        u = admins;
+    }
 }

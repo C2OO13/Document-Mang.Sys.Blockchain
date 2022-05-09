@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 import "./Login.sol";
+import "./NotificationContract.sol";
 import "./BirthCertiContract.sol";
 import "./AadharCardContract.sol";
 import "./ShareCertificateContract.sol";
 import "./PassportCertiContract.sol";
 
-contract Dashboard is Login, BirthCertiContract, AadharCardContract, ShareCertificateContract, PassportCertiContract{
+contract Dashboard is Login, BirthCertiContract, AadharCardContract, ShareCertificateContract, PassportCertiContract, NotificationContract{
 
     address public owner;
 
@@ -47,10 +48,6 @@ contract Dashboard is Login, BirthCertiContract, AadharCardContract, ShareCertif
         return false;
     } 
 
-    function registerApplicant(string memory _accountName, string memory _name, string memory _password) public {
-        signUpApplicant(_accountName,_name,_password);
-    }
-
     function registerApprover(string memory _accNameAdmin, string memory _passwordAdmin, string memory _accountName, string memory _name, string memory _password) public {
         bool check = login(_accNameAdmin,_passwordAdmin);
         if(!check) return;
@@ -63,181 +60,45 @@ contract Dashboard is Login, BirthCertiContract, AadharCardContract, ShareCertif
         signUpAdmin(_accountName,_name,_password);    
     }
 
-    function changePassword(string memory _accountName, string memory _password, string memory _newPassword) public{
-        changePwd(_accountName,_password,_newPassword);
-    }
+    // function getApprovers() public view returns(User[] memory u){}
+    // function getAdmins() public view returns(User[] memory u){}
+    // function registerApplicant(string memory _accountName, string memory _name, string memory _password) public returns(uint) {}
+    // function changePassword(string memory _accountName, string memory _password, string memory _newPassword) public returns(bool){}
 
-    // Birth Certificate functions
-    // All certis will have to approved in FCFS order 
+
+    // ======> Notification functions <========
+    // function addNotification(string memory accountName, string memory message, string memory redirectLink) public {}
+    // function getUserNotifications(string memory accountName) public view returns(Notification[] memory n) {}
+
+    // ======>  Share Certificates functions <========
+    // function shareCertificate(string memory sharerAccName, string memory sharedToAccName, uint typeOfCerti, uint time, string memory timeOfSharing) public{}
+    // function getSharedCertis(string memory accName) public view returns(SharedCertis[] memory b){}
+
+    // ======>  Birth Certificate functions <========
+    // function getCountOfPendingBirthCertificate() public view returns(uint){}
+    // function newBirthCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {}
+    // function setBirthCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {}
+    // function approveBirthCertificate(string memory accName) public {}
+    // function rejectBirthCertificate(string memory accName) public {}
+    // function getBirthCertificate(string memory accName) public view returns (BirthCertificate memory) {}
+    // function getAllPendingBirthCertificates() public view returns(BirthCertificate[] memory b){}
     
-    function newBirthCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
-        newBirthCertificate(getId(accName),_name,_dob,_ipfsHash,_description);        
-        BirthCerti memory b;
-        b.state = 0;
-        b.id = getId(accName); 
-        enqueueBirthCertificate(b);
-        return; 
-    }  
+    // ======>  Aadhar Card functions <========
+    // function getCountOfPendingAadharCard() public view returns(uint){}
+    // function newAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public {}
+    // function setAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public{}
+    // function approveAadharCard(string memory accName) public {}
+    // function rejectAadharCard(string memory accName) public {}
+    // function getAadharCard(string memory accName) public view returns (AadharCard memory) {}
+    // function getAllPendingAadharCards() public view returns(AadharCard[] memory b){}
 
-    function setBirthCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
-        uint id = getId(accName);
-        BirthCertificate memory c = getBirthCerti(accName);
-        require(c.id == id && id != 0, "Birth Certificate not found!");
-        c = setBirthCertificate(id,_name,_dob,_ipfsHash,_description);
-        BirthCerti memory b;
-        b.state = 0;
-        b.id = getId(accName);
-        enqueueBirthCertificate(b); 
-        return;
-    }  
-
-    function approveBirthCerti(string memory accNameApprover) public {
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        BirthCerti memory b = topBirthCertificate();
-        approveBirthCertificate(b.id);
-        dequeueBirthCertificate();
-        return;
-    }
-
-    function topBirthCerti() public view returns (BirthCertificate memory data) {
-        BirthCerti memory b = topBirthCertificate();
-        data = getBirthCertificate(b.id);
-    }
-
-    function rejectBirthCerti(string memory accNameApprover) public {
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        BirthCerti memory b = topBirthCertificate();
-        rejectBirthCertificate(b.id);
-        dequeueBirthCertificate();
-        return;
-    }
-
-    function getBirthCerti(string memory accName) public view returns(BirthCertificate memory){
-        return getBirthCertificate(getId(accName));
-    }
-
-    function getCountPendingBirthCerti() public view returns(uint){
-        return getCountOfPendingBirthCertificate();
-    }
-
+    // ======>  Passport Certificate functions <========
+    // function getCountOfPendingPassportCertificate() internal view returns(uint){}
+    // function newPassportCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {}
+    // function setPassportCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {}
+    // function approvePassportCertificate(string memory accName) public{}
+    // function rejectPassportCertificate(string memory accName) public {}
+    // function getPassportCertificate(string memory accName) public view returns (PassportCertificate memory) {}
+    // function getAllPendingPassportCertis() public view returns(PassportCertificate[] memory b){}
     
-    // Aadhar Card functions
-    // All cards will have to approved in FCFS order 
-    
-    function newAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public {
-        newAadharCard(getId(accName),_name,_number,_ipfsHash,_description);        
-        AadharCardQueue memory b;
-        b.state = 0;
-        b.id = getId(accName); 
-        enqueueAadharCard(b);
-        return; 
-    }  
-
-    function setAadharCard(string memory accName, string memory _name, string memory _number, string memory _ipfsHash, string memory _description) public {
-        uint id = getId(accName);
-        AadharCard memory c = getAadharCard(accName);
-        require(c.id == id && id != 0, "Aadhar card not found!");
-        c = setAadharCard(id,_name,_number,_ipfsHash,_description);
-        AadharCardQueue memory b;
-        b.state = 0;
-        b.id = getId(accName);
-        enqueueAadharCard(b); 
-        return;
-    }  
-
-    function approveAadharCard(string memory accNameApprover) public {
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        AadharCardQueue memory b = topAadharCard();
-        approveAadharCard(b.id);
-        dequeueAadharCard();
-        return ;
-    }
-
-    function topAadharCerti() public view returns (AadharCard memory data) {
-        AadharCardQueue memory b = topAadharCard();
-        data = getAadharCard(b.id);
-    }
-
-    function rejectAadharCard(string memory accNameApprover) public {
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        AadharCardQueue memory b = topAadharCard();
-        rejectAadharCard(b.id);
-        dequeueAadharCard();
-        return ;
-    }
-
-    function getAadharCard(string memory accName) public view returns(AadharCard memory){
-        return getAadharCard(getId(accName));
-    }
-
-    function getCountPendingAadharCard() public view returns(uint){
-        return getCountOfPendingAadharCard();
-    }
-
-    // Share Certificates functions
-
-    function shareCerti(string memory accName, string memory viewerAccName, uint typeOfCerti, uint time) public {
-        shareCertificate(accName, viewerAccName,typeOfCerti,time);
-    }
-
-    function checkIfSharedCerti(string memory accName, string memory viewerAccName, uint typeOfCerti) public view returns(bool){
-        return checkSharedCertificate(accName,viewerAccName,typeOfCerti);
-    } 
-
-    // Passport Certificate functions
-    // All certis will have to approved in FCFS order 
-    
-    function newPassportCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
-        newPassportCertificate(getId(accName),_name,_dob,_ipfsHash,_description);        
-        PassportCerti memory b;
-        b.state = 0;
-        b.id = getId(accName); 
-        enqueuePassportCertificate(b);
-        return; 
-    }  
-
-    function setPassportCerti(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
-        uint id = getId(accName);
-        PassportCertificate memory c = getPassportCerti(accName);
-        require(c.id == id && id != 0, "Passport Certificate not found!");
-        c = setPassportCertificate(id,_name,_dob,_ipfsHash,_description);
-        PassportCerti memory b;
-        b.state = 0;
-        b.id = getId(accName);
-        enqueuePassportCertificate(b); 
-        return;
-    }  
-
-    function approvePassportCerti(string memory accNameApprover) public{
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        PassportCerti memory b = topPassportCertificate();
-        string memory accName = userId_user[b.id].accountName;
-        require(checkIfSharedCerti(accName,accNameApprover,1) == true, "Share Birth Certificate with Approver!");
-        require(checkIfSharedCerti(accName,accNameApprover,2) == true, "Share Aadhar Card with Approver!");
-        approvePassportCertificate(b.id);
-        dequeuePassportCertificate();
-        return;
-    }
-
-    function topPassportCerti() public view returns (PassportCertificate memory data) {
-        PassportCerti memory b = topPassportCertificate();
-        data = getPassportCertificate(b.id);
-    }
-
-    function rejectPassportCerti(string memory accNameApprover) public {
-        require(isApprover(accNameApprover) == true, "Approver rights required");
-        PassportCerti memory b = topPassportCertificate();
-        rejectPassportCertificate(b.id);
-        dequeuePassportCertificate();
-        return;
-    }
-
-    function getPassportCerti(string memory accName) public view returns(PassportCertificate memory){
-        return getPassportCertificate(getId(accName));
-    }
-
-    function getCountPendingPassportCerti() public view returns(uint){
-        return getCountOfPendingPassportCertificate();
-    }
-
 }

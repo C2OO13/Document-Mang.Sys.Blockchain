@@ -8,15 +8,15 @@ contract PassportCertiContract {
         string dob;
         string ipfsHash;
         string description;
-        uint id;
+        string accName;
         uint state; // 0=Requested Approval / 1= WIP / 2= Approved / 3= Denied
     }
 
-    mapping (uint => PassportCertificate) private passportCertificates;
+    mapping (string => PassportCertificate) private passportCertificates;
 
     struct PassportCerti{
         uint state;
-        uint id;
+        string accName;
     }
     
     mapping(uint => PassportCerti) private queuePassportCertificate;
@@ -33,11 +33,6 @@ contract PassportCertiContract {
         queuePassportCertificate[lastPassportCertificate] = data;
     }
 
-    function topPassportCertificate() internal view returns (PassportCerti memory data) {
-        require(lastPassportCertificate >= firstPassportCertificate); 
-        data = queuePassportCertificate[firstPassportCertificate];
-    }
-
     function dequeuePassportCertificate() internal returns (PassportCerti memory data) {
         require(lastPassportCertificate >= firstPassportCertificate); 
         data = queuePassportCertificate[firstPassportCertificate];
@@ -45,53 +40,84 @@ contract PassportCertiContract {
         firstPassportCertificate += 1;
     }
 
-    function getCountOfPendingPassportCertificate() internal view returns(uint){
+    function getCountOfPendingPassportCertificate() public view returns(uint){
         return ((lastPassportCertificate + 1) - firstPassportCertificate);
     }
 
-    function newPassportCertificate(uint id, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) internal returns(PassportCertificate memory){
+    function newPassportCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
         PassportCertificate memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.dob = _dob;
         c.state = 0;
-        c.id = id;
-        passportCertificates[id] = c;
-        return c;
+        c.accName = accName;
+        passportCertificates[accName] = c;
+        PassportCerti memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueuePassportCertificate(b);
     }
 
-    function setPassportCertificate(uint id, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) internal returns(PassportCertificate memory){
+    function setPassportCertificate(string memory accName, string memory _name, string memory _dob, string memory _ipfsHash, string memory _description) public {
         PassportCertificate memory c;
         c.ipfsHash = _ipfsHash;
         c.description = _description;
         c.name = _name;
         c.dob = _dob;
         c.state = 0;
-        c.id = id;
-        passportCertificates[id] = c;
-        return c;
+        c.accName = accName;
+        passportCertificates[accName] = c;
+        PassportCerti memory b;
+        b.state = 0;
+        b.accName = accName; 
+        enqueuePassportCertificate(b);
     }
 
-    function approvePassportCertificate(uint id) internal returns (PassportCertificate memory){
-        PassportCertificate memory c = passportCertificates[id];
-        if(c.state != 0) return c;
+    function approvePassportCertificate(string memory accName) public{
+        PassportCertificate memory c = passportCertificates[accName];
+        if(c.state != 0) return;
         c.state = 2;
-        passportCertificates[id] = c;
-        return c;
+        passportCertificates[accName] = c;
+        updatePassportQueue();
     }
     
-    function rejectPassportCertificate(uint id) internal returns (PassportCertificate memory){
-        PassportCertificate memory c = passportCertificates[id];
-        if(c.state == 3) return c;
+    function rejectPassportCertificate(string memory accName) public {
+        PassportCertificate memory c = passportCertificates[accName];
+        if(c.state == 3) return;
         c.state = 3;
-        passportCertificates[id] = c;
-        return c;
+        passportCertificates[accName] = c;
+        updatePassportQueue();
     }
 
-    function getPassportCertificate(uint id) internal view returns (PassportCertificate memory) {
-        return passportCertificates[id];
+    function getPassportCertificate(string memory accName) public view returns (PassportCertificate memory) {
+        return passportCertificates[accName];
     }
+
+    function updatePassportQueue() private{
+        require(lastPassportCertificate >= firstPassportCertificate); 
+        uint i=firstPassportCertificate;
+        while(i<=lastPassportCertificate){
+            PassportCertificate memory temp = getPassportCertificate(queuePassportCertificate[i++].accName);
+            if(temp.state != 0) dequeuePassportCertificate();
+            else return;
+        }
+    }
+
+    function getAllPendingPassportCertis() public view returns(PassportCertificate[] memory b){
+        require(lastPassportCertificate >= firstPassportCertificate, "No pending passports!"); 
+        uint i=firstPassportCertificate;
+        uint j=lastPassportCertificate-firstPassportCertificate;
+        b = new PassportCertificate[](j+1);
+        j=0;
+        PassportCertificate memory temp;
+        while(i<=lastPassportCertificate){
+            PassportCerti memory c = queuePassportCertificate[i++];
+            temp = getPassportCertificate(c.accName);
+            if(temp.state == 0) b[j++] = temp;
+        }
+    }
+
 }
 
 
