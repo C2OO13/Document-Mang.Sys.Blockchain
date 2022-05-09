@@ -4,11 +4,13 @@ import cors from 'cors'
 import express from 'express'
 import passport from 'passport'
 import session from 'express-session'
-import routes from './routes/index.js'
 import certiRoutes from './routes/certis.js'
 import loginroutes from './routes/userAuth.js'
-import flash from 'express-flash'
+import './middlewares/auth/passportStrategy.js'
 config({ path: './.env' })
+
+import initializePassport from './middlewares/auth/passportStrategy'
+initializePassport(passport)
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -36,15 +38,11 @@ app.use(
   })
 )
 
-// Authentication Middleware
-import './middlewares/auth/passportStrategy.js'
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(flash())
-// Routes
-app.use('/', routes)
-app.use('/', loginroutes)
 
+// Routes
+app.use('/', loginroutes)
 app.use('/', certiRoutes)
 
 app.listen(PORT, () => {
