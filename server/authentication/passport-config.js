@@ -1,9 +1,8 @@
-const LocalStrategy = require('passport-local').Strategy
-const bcrypt = require('bcrypt')
+import passportLocal from 'passport-local'
 
-const { login } = require('../blockchain/methods')
+import { login } from '../blockchain/methods.js'
 
-const initialize = (passport, getUserByEmail) => {
+export const initialize = (passport, getUserByEmail) => {
   const authenticateUser = (email, password, done) => {
     const user = login(email, password)
     if (!user) {
@@ -12,11 +11,11 @@ const initialize = (passport, getUserByEmail) => {
     return done(null, user)
   }
 
-  passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
+  passport.use(
+    new passportLocal.Strategy({ usernameField: 'email' }, authenticateUser)
+  )
   passport.serializeUser((user, done) => done(null, user.email))
   passport.deserializeUser((email, done) => {
     return done(null, getUserByEmail(email))
   })
 }
-
-module.exports = initialize
