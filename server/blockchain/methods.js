@@ -645,8 +645,14 @@ export const logout = async (req, res) => {
 }
 
 export const check_auth = async (req, res) => {
+  // console.log('Inside check auth', req.user)
+  if (req.user) {
+    res.send({
+      isAuthenticated: true,
+    })
+  }
   res.send({
-    isAuthenticated: req.isAuthenticated(),
+    isAuthenticated: false,
   })
 }
 

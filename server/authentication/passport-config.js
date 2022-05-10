@@ -1,21 +1,30 @@
 import passportLocal from 'passport-local'
 
-import { login } from '../blockchain/methods.js'
-
 export const initialize = (passport, getUserByEmail) => {
-  const authenticateUser = (email, password, done) => {
-    const user = login(email, password)
+  const authenticateUser = async (email, password, done) => {
+    const user = await getUserByEmail(email)
     if (!user) {
       return done(null, false, { message: 'Invalid Credentials!' })
     }
-    return done(null, user)
+    const user_object = {
+      email: user[1],
+      name: user[0],
+      password: user[2],
+    }
+    return done(null, user_object)
   }
 
-  passport.use(
-    new passportLocal.Strategy({ usernameField: 'email' }, authenticateUser)
-  )
-  passport.serializeUser((user, done) => done(null, user.email))
-  passport.deserializeUser((email, done) => {
-    return done(null, getUserByEmail(email))
+  passport.use(new passportLocal.Strategy(authenticateUser))
+  passport.serializeUser((user, done) => {
+    done(null, user.email)
+  })
+
+  passport.deserializeUser(async (email, done) => {
+    const user = await getUserByEmail(email)
+    done(null, {
+      email: user[1],
+      name: user[0],
+      password: user[2],
+    })
   })
 }

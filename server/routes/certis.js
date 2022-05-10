@@ -54,16 +54,23 @@ router.get('/api/get_user', getUser)
 router.get('/api/get_approvers', getApprovers)
 router.get('/api/get_admins', getAdmins)
 router.get('/api/get_id', getId)
-router.post(
-  '/api/login',
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/',
-  })
-)
-router.post('/api/register_applicant', registerApplicant)
-router.post('/api/register_approver', registerApprover)
-router.post('/api/register_admin', registerAdmin)
+// Dis respect
+const passportHandler = (req, res, next) => {
+  passport.authenticate('local', (err, user) => {
+    if (err) {
+      console.log('Error: ', err)
+      return next(err)
+    }
+    if (!user) return res.json({ error: 'Unauthorized user' })
+    req.user = user
+    next()
+  })(req, res, next)
+}
+
+router.post('/api/login', passport.authenticate('local'), (req, res) => {
+  res.status(200).send()
+})
+
 router.get('/api/check_auth', check_auth)
 router.delete('/api/logout', logout)
 router.get('/api/is_applicant', isApplicant)

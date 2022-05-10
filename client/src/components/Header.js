@@ -9,7 +9,8 @@ const Header = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/check-auth')
+      const { data } = await axios.get('/api/check_auth')
+      console.log('Response from server', data)
       if (!data.isAuthenticated) {
         history.push('/')
       } else {
@@ -21,7 +22,9 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const jsx = !isAuthenticated ? null : (
+  if (!isAuthenticated) return null
+
+  return (
     <div className="ui secondary pointing menu">
       <Link to="/dashboard" className="item">
         BBDMS
@@ -39,8 +42,6 @@ const Header = () => {
       </div>
     </div>
   )
-
-  return jsx
 }
 
 export default Header

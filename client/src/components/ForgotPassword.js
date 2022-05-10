@@ -8,7 +8,7 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/check-auth')
+      const { data } = await axios.get('/api/check_auth')
       if (data.isAuthenticated) {
         history.push('/dashboard')
       }

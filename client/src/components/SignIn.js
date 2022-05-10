@@ -7,10 +7,11 @@ const SignIn = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/check-auth')
+      const { data } = await axios.get('/api/check_auth')
       if (data.isAuthenticated) {
         history.push('/dashboard')
       }
+      console.log(data)
     }
 
     checkAuth()
@@ -21,10 +22,11 @@ const SignIn = () => {
     e.preventDefault()
     const email = e.target[0].value
     const password = e.target[1].value
-    let formData = {}
-    formData.email = email
-    formData.password = password
-    await axios.post('/login', formData)
+    await axios.post('/api/login', {
+      email,
+      password,
+    })
+    history.push('/dashboard')
   }
 
   return (

@@ -8,7 +8,7 @@ const SignUp = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/check-auth')
+      const { data } = await axios.get('/api/check_auth')
       if (data.isAuthenticated) {
         history.push('/dashboard')
       }
@@ -18,9 +18,33 @@ const SignUp = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    history.push('/verify_email')
+    const fname = e.target[0].value
+    const lname = e.target[1].value
+    const email = e.target[2].value
+    const password = e.target[3].value
+    const cpassword = e.target[4].value
+    if (password !== cpassword) {
+      alert('Passwords do not match!')
+      return
+    }
+
+    const { data } = await axios.post('/api/register_applicant', {
+      accName: email,
+      name: `${fname} ${lname}`,
+      password,
+    })
+    console.log(data)
+
+    if (data) {
+      alert('Registered Successfully! Please proceed to sign in.')
+      history.push('/')
+    } else {
+      alert('Email already in use!')
+    }
+
+    // history.push('/verify_email')
   }
 
   return (
@@ -49,22 +73,6 @@ const SignUp = () => {
         <br />
         <label>Confirm Password:</label>
         <input type="password" required />
-        <br />
-        <br />
-        <label>Register as:</label>
-        <br />
-        <br />
-        <input
-          type="radio"
-          id="Approver"
-          name="Profile"
-          value="Approver"
-          required
-        />
-        <label htmlFor="Approver"> Approver</label>
-        <br />
-        <input type="radio" id="Applicant" name="Profile" value="Applicant" />
-        <label htmlFor="Applicant"> Applicant</label>
         <br />
         <br />
         <br />

@@ -10,10 +10,9 @@ import { getUserByEmail } from './blockchain/methods.js'
 config({ path: './.env' })
 
 import { initialize } from './authentication/passport-config.js'
-initialize(passport, getUserByEmail)
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 8000
 
 app.use(
   bodyParser.json({
@@ -33,14 +32,14 @@ app.use(cors())
 app.use(
   session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
   })
 )
 
+initialize(passport, getUserByEmail)
 app.use(passport.initialize())
 app.use(passport.session())
-
 // Routes
 app.use('/', certiRoutes)
 
