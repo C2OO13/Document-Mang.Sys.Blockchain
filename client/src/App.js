@@ -1,45 +1,45 @@
-import './App.css'
-import React from 'react'
-import { Route, BrowserRouter, Switch } from 'react-router-dom'
+import './App.css';
+import React from 'react';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
-import CreateCertificate from './components/CreateCertificate'
-import Header from './components/Header'
-import Home from './components/Home'
+import CreateCertificate from './components/CreateCertificate';
+import Header from './components/Header';
+import Home from './components/Home';
 // import UploadTemplate from './components/UploadTemplate'
-import VerifyCertificate from './components/VerifyCertificate'
-import PasswordReset from './components/PasswordReset'
-import SignUp from './components/SignUp'
-import ForgotPassword from './components/ForgotPassword'
-import VerifyEmail from './components/VerifyEmail'
-import SignIn from './components/SignIn'
+import VerifyCertificate from './components/VerifyCertificate';
+import PasswordReset from './components/PasswordReset';
+import SignUp from './components/SignUp';
+import ForgotPassword from './components/ForgotPassword';
+import VerifyEmail from './components/VerifyEmail';
+import SignIn from './components/SignIn';
 
 const App = () => {
   return (
-    <div className="ui container">
+    <div className='ui container'>
       <BrowserRouter>
-        <Header />
+        {/* <Header /> */}
         <Switch>
-          <Route path="/" exact component={SignIn} />
-          <Route path="/dashboard" exact component={Home} />
+          <Route path='/' exact component={SignIn} />
+          <Route path='/dashboard' exact component={Home} />
           <Route
-            path="/create_certificate"
+            path='/create_certificate'
             exact
             component={CreateCertificate}
           />
           <Route
-            path="/verify_certificate"
+            path='/verify_certificate'
             exact
             component={VerifyCertificate}
           />
           {/* <Route path="/upload_template" exact component={UploadTemplate} /> */}
-          <Route path="/password_reset" exact component={PasswordReset} />
-          <Route path="/signup" exact component={SignUp} />
-          <Route path="/change_password" exact component={ForgotPassword} />
-          <Route path="/verify_email" exact component={VerifyEmail} />
+          <Route path='/password_reset' exact component={PasswordReset} />
+          <Route path='/signup' exact component={SignUp} />
+          <Route path='/change_password' exact component={ForgotPassword} />
+          <Route path='/verify_email' exact component={VerifyEmail} />
         </Switch>
       </BrowserRouter>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
