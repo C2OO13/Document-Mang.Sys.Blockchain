@@ -24,6 +24,7 @@ const address = signer.address
 
 export const verifyCerti = async (req, res) => {
   try {
+    req.body.email = req.user.email
     const { type, email } = req.body
     const file = req.file.buffer
     var inputData, storedData
@@ -70,8 +71,11 @@ export const verifyCerti = async (req, res) => {
 
 export const newBirthCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
+    console.log('Here1')
     await birthCreate(data)
+    console.log('Here')
     const link = await getIpfsLink(data.email)
     await MainContract.methods
       .newBirthCertificate(
@@ -92,6 +96,7 @@ export const newBirthCertificate = async (req, res) => {
 
 export const setBirthCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
     await birthCreate(data)
     const link = await getIpfsLink(data.email)
@@ -114,6 +119,7 @@ export const setBirthCertificate = async (req, res) => {
 
 export const approveBirthCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .approveBirthCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
@@ -127,6 +133,7 @@ export const approveBirthCertificate = async (req, res) => {
 
 export const rejectBirthCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .rejectBirthCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
@@ -153,9 +160,12 @@ export const getTopBirthCertificate = async (req, res) => {
 
 export const getBirthCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     const data = await MainContract.methods
       .getBirthCertificate(req.body.email)
       .call()
+
+    console.log(data)
 
     return res.send(JSON.stringify(data))
   } catch (error) {
@@ -192,6 +202,7 @@ export const getAllPendingBirthCertificates = async (req, res) => {
 
 export const newAadharCard = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
     await aadharCreate(data)
     const link = await getIpfsLink(data.email)
@@ -214,6 +225,7 @@ export const newAadharCard = async (req, res) => {
 
 export const setAadharCard = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
     await aadharCreate(data)
     const link = await getIpfsLink(data.email)
@@ -236,6 +248,7 @@ export const setAadharCard = async (req, res) => {
 
 export const approveAadharCard = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .approveAadharCard(req.body.email)
       .send({ from: address, gas: '300000' })
@@ -260,6 +273,7 @@ export const getTopAadharCerti = async (req, res) => {
 
 export const rejectAadharCard = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .rejectAadharCard(req.body.email)
       .send({ from: address, gas: '300000' })
@@ -273,7 +287,8 @@ export const rejectAadharCard = async (req, res) => {
 
 export const getAadharCard = async (req, res) => {
   try {
-    const data = await MainContract.methods.getAadharCard(req.body.acc).call()
+    req.body.email = req.user.email
+    const data = await MainContract.methods.getAadharCard(req.body.email).call()
 
     return res.send(JSON.stringify(data))
   } catch (error) {
@@ -306,6 +321,7 @@ export const getAllPendingAadharCards = async (req, res) => {
 
 export const shareCerti = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .shareCerti(req.body.email, req.body.toShareEmail, req.body.type, 5)
       .send({ from: address, gas: '300000' })
@@ -332,6 +348,7 @@ export const getSharedCertis = async (req, res) => {
 
 export const newPassportCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
     await passportCreate(data)
     const link = await getIpfsLink(data.email)
@@ -354,6 +371,7 @@ export const newPassportCertificate = async (req, res) => {
 
 export const setPassportCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     var data = req.body
     await passportCreate(data)
     const link = await getIpfsLink(data.email)
@@ -376,6 +394,7 @@ export const setPassportCertificate = async (req, res) => {
 
 export const approvePassportCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     await MainContract.methods
       .approvePassportCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
@@ -413,8 +432,9 @@ export const rejectPassportCertificate = async (req, res) => {
 
 export const getPassportCertificate = async (req, res) => {
   try {
+    req.body.email = req.user.email
     const data = await MainContract.methods
-      .getPassportCertificate(req.body.acc)
+      .getPassportCertificate(req.body.email)
       .call()
 
     return res.send(JSON.stringify(data))
@@ -524,8 +544,8 @@ export const isAdmin = async (req, res) => {
 
 export const isApprover = async (req, res) => {
   try {
+    req.body.accName = req.user.email
     const data = await MainContract.methods.isApprover(req.body.accName).call()
-
     return res.send(JSON.stringify(data))
   } catch (error) {
     console.log(error)
@@ -535,8 +555,9 @@ export const isApprover = async (req, res) => {
 
 export const isApplicant = async (req, res) => {
   try {
-    var data = await MainContract.methods.getUser(req.body.accName).call()
-    if (data[3] == 1) data = true
+    req.body.accName = req.user.email
+    let data = await MainContract.methods.getUser(req.body.accName).call()
+    if (data[3] === 1) data = true
     else data = false
     return res.send(JSON.stringify(data))
   } catch (error) {

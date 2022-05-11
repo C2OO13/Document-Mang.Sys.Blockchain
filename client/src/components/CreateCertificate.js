@@ -4,6 +4,7 @@ import axios from '../api'
 import BirthCertificateForm from './forms/BirthCertificateForm'
 import AadharCertificateForm from './forms/AadharCertificateForm'
 import PassportCertificateForm from './forms/PassportCertificateForm'
+import Header from './Header'
 
 const CreateCertificate = () => {
   const [certificate, setCertificate] = useState(null)
@@ -12,12 +13,13 @@ const CreateCertificate = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/api/check_auth')
-      if (!data.isAuthenticated) {
+      try {
+        await axios.get('/api/check_auth')
+      } catch (e) {
+        console.log(e)
         history.push('/')
       }
     }
-
     checkAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -25,16 +27,22 @@ const CreateCertificate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    let formData = {}
-
     if (certificate === 1) {
-      formData.childName = event.target[0].value
-      formData.guardianName = event.target[1].value
-      formData.hospitalName = event.target[2].value
-      formData.dateOfBirth = event.target[3].value
-      formData.timeOfBirth = event.target[4].value
-      formData.location = event.target[5].value
-      const { data } = await axios.post('/api/new_birth_certi', formData)
+      console.log('Birth!')
+      const childName = event.target[0].value
+      const guardianName = event.target[1].value
+      const hospitalName = event.target[2].value
+      const dateOfBirth = event.target[3].value
+      const timeOfBirth = event.target[4].value
+      const location = event.target[5].value
+      const { data } = await axios.post('/api/new_birth_certificate', {
+        dateOfBirth,
+        childName,
+        guardianName,
+        hospitalName,
+        timeOfBirth,
+        location,
+      })
       if (data === 'true') {
         alert('Birth Certificate Sent for Approval!')
         history.push('/dashboard')
@@ -42,11 +50,16 @@ const CreateCertificate = () => {
         alert('Something went wrong! Please try again!')
       }
     } else if (certificate === 2) {
-      formData.applicantName = event.target[0].value
-      formData.fatherName = event.target[1].value
-      formData.address = event.target[2].value
-      formData.contactNumber = event.target[3].value
-      const { data } = await axios.post('/api/new_aadhar_card', formData)
+      const applicantName = event.target[0].value
+      const fatherName = event.target[1].value
+      const address = event.target[2].value
+      const contactNo = event.target[3].value
+      const { data } = await axios.post('/api/new_aadhar_card', {
+        applicantName,
+        fatherName,
+        address,
+        contactNo,
+      })
       if (data === 'true') {
         alert('AadharCard certificate sent for approval!')
         history.push('/dashboard')
@@ -54,13 +67,20 @@ const CreateCertificate = () => {
         alert('Something went wrong! Please try again!')
       }
     } else {
-      formData.applicantName = event.target[0].value
-      formData.fatherName = event.target[1].value
-      formData.motherName = event.target[2].value
-      formData.address = event.target[3].value
-      formData.contactNumber = event.target[4].value
-      formData.dateOfBirth = event.target[5].value
-      const { data } = await axios.post('/api/new_passport_certi', formData)
+      const applicantName = event.target[0].value
+      const fatherName = event.target[1].value
+      const motherName = event.target[2].value
+      const address = event.target[3].value
+      const contactNumber = event.target[4].value
+      const dateOfBirth = event.target[5].value
+      const { data } = await axios.post('/api/new_passport_certificate', {
+        applicantName,
+        fatherName,
+        motherName,
+        address,
+        contactNumber,
+        dateOfBirth,
+      })
       if (data === 'true') {
         alert('Passport certificate sent for approval!')
         history.push('/dashboard')
@@ -72,6 +92,7 @@ const CreateCertificate = () => {
 
   return (
     <div>
+      <Header />
       <h1 style={{ textAlign: 'center' }}>Create Certificate</h1>
       <form className="ui form" style={{ width: '1000px', margin: '0 auto' }}>
         <label>For:</label>

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
+import Header from './Header'
 import axios from '../api'
 
 const VerifyCertificate = () => {
@@ -8,8 +9,9 @@ const VerifyCertificate = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/api/check_auth')
-      if (!data.isAuthenticated) {
+      try {
+        await axios.get('/api/check_auth')
+      } catch (e) {
         history.push('/')
       }
     }
@@ -44,6 +46,7 @@ const VerifyCertificate = () => {
 
   return (
     <div>
+      <Header />
       <h1 style={{ textAlign: 'center' }}>Verify Certificate</h1>
       <form
         className="ui form"
