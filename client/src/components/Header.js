@@ -9,15 +9,14 @@ const Header = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/api/check_auth')
-      console.log('Response from server', data)
-      if (!data.isAuthenticated) {
-        history.push('/')
-      } else {
+      try {
+        await axios.get('/api/check_auth')
         setIsAuthenticated(true)
+      } catch (e) {
+        console.log(e)
+        history.push('/')
       }
     }
-
     checkAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

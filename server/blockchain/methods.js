@@ -545,9 +545,29 @@ export const isApplicant = async (req, res) => {
   }
 }
 
-export const login = async (email, password) => {
-  const data = await MainContract.methods.login(email, password).call()
-  return data
+export const login = async (req, res) => {
+  try {
+    console.log('=====================================', req.body)
+    const data = await MainContract.methods
+      .login(req.body.accName, req.body.password)
+      .call()
+    return res.send(JSON.stringify(data))
+  } catch (error) {
+    console.log(error)
+    res.send(error.message)
+  }
+}
+
+export const signupUser = async (accName, name, password) => {
+  try {
+    await MainContract.methods
+      .registerApplicant(accName, name, password)
+      .send({ from: address, gas: '300000' })
+    // console.log(data)
+    return true
+  } catch (error) {
+    return false
+  }
 }
 
 export const registerApplicant = async (req, res) => {
@@ -637,23 +657,6 @@ export const getUserNotifications = async (req, res) => {
     console.log(error)
     return res.send(error.message)
   }
-}
-
-export const logout = async (req, res) => {
-  req.logOut()
-  res.redirect('/')
-}
-
-export const check_auth = async (req, res) => {
-  // console.log('Inside check auth', req.user)
-  if (req.user) {
-    res.send({
-      isAuthenticated: true,
-    })
-  }
-  res.send({
-    isAuthenticated: false,
-  })
 }
 
 /*

@@ -3,45 +3,44 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import passport from 'passport'
-import session from 'express-session'
+import cookieParser from 'cookie-parser'
+
 import certiRoutes from './routes/certis.js'
-import { getUserByEmail } from './blockchain/methods.js'
+import authRoutes from './routes/auth.js'
 
 config({ path: './.env' })
-
-import { initialize } from './authentication/passport-config.js'
 
 const app = express()
 const PORT = process.env.PORT || 8000
 
-app.use(
-  bodyParser.json({
-    limit: '30mb',
-    extended: true,
-  })
-)
-app.use(
-  bodyParser.urlencoded({
-    limit: '30mb',
-    extended: true,
-  })
-)
-app.use(cors())
+app.use(express.json())
+app.use(cookieParser())
 
-// Start Session
+// app.use(
+//   bodyParser.json({
+//     limit: '30mb',
+//     extended: true,
+//   })
+// )
+// app.use(
+//   bodyParser.urlencoded({
+//     limit: '30mb',
+//     extended: true,
+//   })
+// )
 app.use(
-  session({
-    secret: 'secret',
-    resave: false,
-    saveUninitialized: false,
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000'],
   })
 )
 
-initialize(passport, getUserByEmail)
+import './middlewares/auth/passportAuth.js'
 app.use(passport.initialize())
-app.use(passport.session())
+
 // Routes
 app.use('/', certiRoutes)
+app.use('/', authRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server Listening to Port: ${PORT}`)

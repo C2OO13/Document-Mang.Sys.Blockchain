@@ -7,13 +7,13 @@ const SignIn = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data } = await axios.get('/api/check_auth')
-      if (data.isAuthenticated) {
+      try {
+        await axios.get('/api/check_auth')
         history.push('/dashboard')
+      } catch (e) {
+        console.log(e)
       }
-      console.log(data)
     }
-
     checkAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

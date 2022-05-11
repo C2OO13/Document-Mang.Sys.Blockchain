@@ -31,7 +31,7 @@ const SignUp = () => {
     }
 
     const { data } = await axios.post('/api/register_applicant', {
-      accName: email,
+      email,
       name: `${fname} ${lname}`,
       password,
     })
