@@ -43,7 +43,7 @@ const CreateCertificate = () => {
         timeOfBirth,
         location,
       })
-      if (data === 'true') {
+      if (data) {
         alert('Birth Certificate Sent for Approval!')
         history.push('/dashboard')
       } else {
@@ -60,7 +60,7 @@ const CreateCertificate = () => {
         address,
         contactNo,
       })
-      if (data === 'true') {
+      if (data) {
         alert('AadharCard certificate sent for approval!')
         history.push('/dashboard')
       } else {
@@ -81,7 +81,7 @@ const CreateCertificate = () => {
         contactNumber,
         dateOfBirth,
       })
-      if (data === 'true') {
+      if (data) {
         alert('Passport certificate sent for approval!')
         history.push('/dashboard')
       } else {

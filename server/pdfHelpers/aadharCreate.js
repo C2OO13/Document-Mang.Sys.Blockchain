@@ -1,14 +1,24 @@
-import fetch from 'node-fetch'
+import fs from 'fs'
+import path from 'path'
 import { PDFDocument } from 'pdf-lib'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+import axios from 'axios'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const uploadDir = path.join(__dirname, '../pdf_file')
 
 export const aadharCreate = async (data) => {
   // Fetch the PDF with form fields
   const formUrl =
     'https://ipfs.io/ipfs/QmVfydetmBLamwik4bHjMQKWZQBaCVzm1zGssuN4SfoDqa' //Path of Form to Fill
-  const formPdfBytes = await fetch(formUrl).then((res) => res.arrayBuffer())
+  const formPdfBytes = await axios.get(formUrl, {
+    responseType: 'arraybuffer',
+  })
 
   // Load a PDF with form fields
-  const pdfDoc = await PDFDocument.load(formPdfBytes)
+  const pdfDoc = await PDFDocument.load(formPdfBytes.data)
 
   // Get the form containing all the fields
   const form = pdfDoc.getForm()
@@ -34,5 +44,5 @@ export const aadharCreate = async (data) => {
 
   // Trigger the browser to download the PDF document
   // download(pdfBytes, "pdf-lib_form_creation_example.pdf", "application/pdf");
-  return pdfBytes
+  fs.writeFileSync(path.join(uploadDir, `${data.email}_aadhar.pdf`), pdfBytes)
 }

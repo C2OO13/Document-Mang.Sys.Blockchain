@@ -1,11 +1,9 @@
-import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
 import { PDFDocument } from 'pdf-lib'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-// import multer from 'multer'
-// const upload = multer()
+import axios from 'axios'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -16,13 +14,13 @@ export const birthCreate = async (data) => {
   console.log('Here32')
   const formUrl =
     'https://ipfs.io/ipfs/QmdqmPxb1g4hoKJijNpb4hm5zPtx8enuQTGq12wBHx6dEz' //Path of Form to Fill
-  const formPdfBytes = await fetch(formUrl).then((res) => {
-    console.log(res)
-    res.arrayBuffer()
+
+  const formPdfBytes = await axios.get(formUrl, {
+    responseType: 'arraybuffer',
   })
   console.log('Here33')
   // Load a PDF with form fields
-  const pdfDoc = await PDFDocument.load(formPdfBytes)
+  const pdfDoc = await PDFDocument.load(formPdfBytes.data)
 
   // Get the form containing all the fields
   const form = pdfDoc.getForm()
@@ -68,7 +66,7 @@ export const birthCreate = async (data) => {
   // Trigger the browser to download the PDF document
   // download(pdfBytes, "pdf-lib_form_creation_example.pdf", "application/pdf");
   fs.writeFileSync(
-    path.join(uploadDir, `${data.email}.pdf`),
+    path.join(uploadDir, `${data.email}_birth.pdf`),
     pdfBytes
     // req.file.buffer
   )

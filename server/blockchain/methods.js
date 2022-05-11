@@ -6,9 +6,6 @@ import { getIpfsLink } from './getIpfsLink.js'
 import { birthCreate } from '../pdfHelpers/birthCreate.js'
 import { aadharCreate } from '../pdfHelpers/aadharCreate.js'
 import { passportCreate } from '../pdfHelpers/passportCreate.js'
-import { birthRead } from '../pdfHelpers/birthRead.js'
-import { aadharRead } from '../pdfHelpers/aadharRead.js'
-import { passportRead } from '../pdfHelpers/passportRead.js'
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -27,44 +24,25 @@ export const verifyCerti = async (req, res) => {
     req.body.email = req.user.email
     const { type, email } = req.body
     const file = req.file.buffer
-    var inputData, storedData
-    fs.writeFileSync(path.join(uploadDir, `Input${email}.pdf`))
+    let storedData
+    fs.writeFileSync(path.join(uploadDir, `Input${email}.pdf`), file)
     const link = await getIpfsLink(`Input${email}`)
-    switch (type) {
-      case 1: {
-        inputData = birthRead(link)
-        storedData = await MainContract.methods
-          .getBirthCertificate(email)
-          .call()
-        storedData = birthRead(storedData[2])
-        break
-      }
-      case 2: {
-        inputData = aadharRead(link)
-        storedData = await MainContract.methods.getAadharCard(email).call()
-        storedData = aadharRead(storedData[2])
-        break
-      }
-      case 3: {
-        inputData = passportRead(link)
-        storedData = await MainContract.methods
-          .getPassportCertificate(email)
-          .call()
-        storedData = passportRead(storedData[2])
-        break
-      }
+    let chk = true
+    if (type === 'Birth') {
+      storedData = await MainContract.methods.getBirthCertificate(email).call()
+    } else if (type === 'Aadhar') {
+      storedData = await MainContract.methods.getAadharCard(email).call()
+    } else {
+      storedData = await MainContract.methods
+        .getPassportCertificate(email)
+        .call()
     }
-
-    var chk = true
-    for (var i = 0; i < inputData.length; i++) {
-      if (inputData[i] != storedData[i]) {
-        chk = false
-        break
-      }
+    if (!storedData || !link || link !== storedData[2]) {
+      chk = false
     }
+    fs.unlinkSync(path.join(uploadDir, `Input${email}.pdf`))
     return res.send(JSON.stringify(chk))
   } catch (error) {
-    console.log(error)
     return res.send(JSON.stringify(false))
   }
 }
@@ -76,9 +54,10 @@ export const newBirthCertificate = async (req, res) => {
     console.log('Here1')
     await birthCreate(data)
     console.log('Here')
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_birth`)
+    console.log(link)
     await MainContract.methods
-      .newBirthCertificate(
+      .newBirthCerti(
         req.body.email,
         req.body.childName,
         req.body.dateOfBirth,
@@ -99,7 +78,7 @@ export const setBirthCertificate = async (req, res) => {
     req.body.email = req.user.email
     var data = req.body
     await birthCreate(data)
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_birth`)
     await MainContract.methods
       .setBirthCertificate(
         req.body.email,
@@ -205,7 +184,7 @@ export const newAadharCard = async (req, res) => {
     req.body.email = req.user.email
     var data = req.body
     await aadharCreate(data)
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_aadhar`)
     await MainContract.methods
       .newAadharCard(
         req.body.email,
@@ -228,7 +207,7 @@ export const setAadharCard = async (req, res) => {
     req.body.email = req.user.email
     var data = req.body
     await aadharCreate(data)
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_aadhar`)
     await MainContract.methods
       .setAadharCard(
         req.body.email,
@@ -351,7 +330,7 @@ export const newPassportCertificate = async (req, res) => {
     req.body.email = req.user.email
     var data = req.body
     await passportCreate(data)
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_passport`)
     await MainContract.methods
       .newPassportCertificate(
         req.body.email,
@@ -374,7 +353,7 @@ export const setPassportCertificate = async (req, res) => {
     req.body.email = req.user.email
     var data = req.body
     await passportCreate(data)
-    const link = await getIpfsLink(data.email)
+    const link = await getIpfsLink(`${data.email}_passport`)
     await MainContract.methods
       .setPassportCertificate(
         req.body.email,
@@ -595,7 +574,7 @@ export const registerApplicant = async (req, res) => {
   console.log('register applicant')
   try {
     await MainContract.methods
-      .registerApplicant(req.body.accName, req.body.name, req.body.password)
+      .registerApplicant(req.body.email, req.body.name, req.body.password)
       .send({ from: address, gas: '300000' })
     // console.log(data)
     return res.send(JSON.stringify(true))

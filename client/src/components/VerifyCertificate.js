@@ -29,7 +29,7 @@ const VerifyCertificate = () => {
     }
 
     let formData = new FormData()
-    formData.append('type', e.target[1].value)
+    formData.append('type', e.target['certificate'].value)
     formData.append('certificate', file)
 
     const { data } = await axios.post('/api/verify_certi', formData, {
@@ -37,7 +37,7 @@ const VerifyCertificate = () => {
         'Content-Type': 'multipart/form-data',
       },
     })
-    if (data === 'true') {
+    if (data) {
       alert('Valid Certificate!')
     } else {
       alert('Not Valid Certificate!')
