@@ -11,6 +11,11 @@ const Home = () => {
   const [fetchedCerti, setFetchedCerti] = useState(null)
   const [certiType, setCertiType] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(null)
+
+  const onTitleClick = (index) => {
+    setActiveIndex(index)
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -31,21 +36,43 @@ const Home = () => {
       const { data } = await axios.get('/api/is_approver')
       if (data === false) {
         setIsApplicant(true)
-        const { birthData } = await axios.get('/api/get_birth_certificate')
-        const { aadharData } = await axios.get('/api/get_aadhar_card')
-        const { passportData } = await axios.get(
+
+        const { data: birthData } = await axios.get(
+          '/api/get_birth_certificate'
+        )
+        const { data: aadharData } = await axios.get('/api/get_aadhar_card')
+        console.log(aadharData)
+        const { data: passportData } = await axios.get(
           '/api/get_passport_certificate'
         )
+        const { data: sharedCertificates } = await axios.get(
+          '/api/get_shared_certis'
+        )
+        console.log(sharedCertificates)
+        let certis = []
 
-        if (birthData) {
-          setDashboard([...dashboard, birthData])
+        if (aadharData[4] !== '') {
+          certis.push([...aadharData, 'aadhar'])
         }
-        if (aadharData) {
-          setDashboard([...dashboard, aadharData])
+
+        if (birthData[4] !== '') {
+          certis.push([...birthData, 'birth'])
         }
-        if (passportData) {
-          setDashboard([...dashboard, passportData])
+
+        if (passportData[4] !== '') {
+          certis.push([...passportData, 'passport'])
         }
+        sharedCertificates.forEach((sharedCertificate) => {
+          if (
+            !(
+              Date.now() - parseInt(sharedCertificate[2]) >
+              parseInt(sharedCertificate[1]) * 24 * 60 * 60 * 1000
+            )
+          ) {
+            certis.push([...sharedCertificate, 'shared'])
+          }
+        })
+        setDashboard([...dashboard, ...certis])
       } else {
         setIsApplicant(false)
       }
@@ -136,25 +163,88 @@ const Home = () => {
     )
   }
 
-  const jsx = isApplicant
-    ? dashboard.map((certificate) => {
+  const jsx = isApplicant ? (
+    <div className="ui styled accordion" style={{ width: '100%' }}>
+      {dashboard.map((certificate, index) => {
+        const active = index === activeIndex ? 'active' : ''
+
         return (
-          <>
-            <div className="item" key={certificate.id}>
-              <div className="right floated content">
-                <a href="certificate.ipfsHash" target="_blank" rel="noreferrer">
-                  <button className="ui button primary">View</button>
-                </a>
-              </div>
-              <i className="file icon" />
-              <div className="content">
-                <div className="header">{certificate.description}</div>
-              </div>
+          <React.Fragment key={certificate[2]}>
+            <div
+              onClick={() => onTitleClick(index)}
+              className={`title ${active}`}
+            >
+              <i className="dropdown icon"></i>
+              {certificate.length === 6
+                ? `Shared With You `
+                : certificate[6] === 'aadhar'
+                ? 'Aadhar Certificate'
+                : certificate[6] === 'birth'
+                ? 'Birth Certificate'
+                : 'Passport Certificate'}
+              {certificate.length === 6
+                ? `(by ${certificate[3]})`
+                : certificate[5] === '0'
+                ? ' (Pending Approval)'
+                : certificate[5] === '2'
+                ? ' (Approved)'
+                : ' (Rejected)'}
             </div>
-          </>
+            <div className={`content ${active}`}>
+              <a
+                href={
+                  certificate.length === 6
+                    ? `${certificate[certificate.length - 2]}`
+                    : `${certificate[2]}`
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <button className="ui button primary">View</button>
+              </a>
+              <button
+                className="ui button primary"
+                onClick={async () => {
+                  if (certificate.length === 6 || certificate[5] !== '2') {
+                    alert('Not Allowed to Share certificate!')
+                    return
+                  }
+                  const toShareEmail = prompt(
+                    'Enter the email to share the certificate with: '
+                  )
+                  const timeperiod = parseInt(
+                    prompt(
+                      'Enter the time period for which you wish to share(in days): '
+                    )
+                  )
+
+                  const { data } = await axios.post('/api/share_certi', {
+                    toShareEmail,
+                    type:
+                      certificate[6] === 'aadhar'
+                        ? 2
+                        : certificate[6] === 'birth'
+                        ? 1
+                        : 3,
+                    timeperiod,
+                  })
+                  if (data) {
+                    alert('Shared Successfully!!')
+                  } else {
+                    alert('Something went wrong!!')
+                  }
+                }}
+              >
+                Share
+              </button>
+            </div>
+          </React.Fragment>
         )
-      })
-    : ApproverDashboard()
+      })}
+    </div>
+  ) : (
+    ApproverDashboard()
+  )
 
   if (!isAuthenticated) return null
 

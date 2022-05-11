@@ -302,7 +302,13 @@ export const shareCerti = async (req, res) => {
   try {
     req.body.email = req.user.email
     await MainContract.methods
-      .shareCerti(req.body.email, req.body.toShareEmail, req.body.type, 5)
+      .shareCertificate(
+        req.body.email,
+        req.body.toShareEmail,
+        req.body.type,
+        req.body.timeperiod,
+        String(Date.now())
+      )
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
@@ -314,11 +320,45 @@ export const shareCerti = async (req, res) => {
 
 export const getSharedCertis = async (req, res) => {
   try {
+    req.body.accName = req.user.email
     const data = await MainContract.methods
       .getSharedCertis(req.body.accName)
       .call()
 
-    return res.send(JSON.stringify(data))
+    let modified_data = []
+    const update = async (certi) => {
+      let new_certi = []
+
+      for (let i = 0; i < 4; i++) {
+        new_certi.push(certi[i])
+      }
+
+      if (certi[0] === '1') {
+        const birthData = await MainContract.methods
+          .getBirthCertificate(certi[3])
+          .call()
+
+        new_certi.push(birthData[2])
+      } else if (certi[1] === '2') {
+        const aadharData = await MainContract.methods
+          .getAadharCard(certi[3])
+          .call()
+        new_certi.push(aadharData[2])
+      } else {
+        const passportData = await MainContract.methods
+          .getPassportCertificate(certi[3])
+          .call()
+        new_certi.push(passportData[2])
+      }
+
+      modified_data.push(new_certi)
+    }
+
+    for (let certi of data) {
+      await update(certi)
+    }
+
+    return res.send(JSON.stringify(modified_data))
   } catch (error) {
     console.log(error)
     return res.send(error.message)
