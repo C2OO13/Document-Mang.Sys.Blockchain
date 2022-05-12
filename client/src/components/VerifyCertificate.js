@@ -29,9 +29,10 @@ const VerifyCertificate = () => {
     }
 
     let formData = new FormData()
+    const email = e.target['email'].value
     formData.append('type', e.target['certificate'].value)
     formData.append('certificate', file)
-
+    formData.append('email', email)
     const { data } = await axios.post('/api/verify_certi', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -74,6 +75,10 @@ const VerifyCertificate = () => {
         <br />
         <input type="radio" id="Passport" name="certificate" value="Passport" />
         <label htmlFor="Passport"> Passport</label>
+        <br />
+        <br />
+        <label>Email of user, whose certificate needs to be verified:</label>
+        <input type="email" name="email" required />
         <br />
         <br />
         <input type="submit" className="ui button primary" value="Verify" />

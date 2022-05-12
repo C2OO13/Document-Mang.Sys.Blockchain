@@ -21,7 +21,6 @@ const address = signer.address
 
 export const verifyCerti = async (req, res) => {
   try {
-    req.body.email = req.user.email
     const { type, email } = req.body
     const file = req.file.buffer
     let storedData
