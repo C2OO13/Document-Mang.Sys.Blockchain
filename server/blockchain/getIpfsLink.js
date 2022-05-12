@@ -8,8 +8,6 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const loadDir = path.join(__dirname, '../pdf_file')
 
-import { encyptPdf } from '../pdfHelpers/encrypt.js'
-
 export const getIpfsLink = async (input) => {
   const ipfs = create('http://127.0.0.1:5002')
 
