@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import validator from 'validator'
 
 import axios from '../api'
 
@@ -25,6 +26,10 @@ const SignUp = () => {
     const email = e.target[2].value
     const password = e.target[3].value
     const cpassword = e.target[4].value
+    if (!validator.isEmail(email)) {
+      alert('Please enter a valid email!')
+      return
+    }
     if (password !== cpassword) {
       alert('Passwords do not match!')
       return

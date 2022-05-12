@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import validator from 'validator'
+
 import axios from '../api'
 
 const SignIn = () => {
@@ -22,11 +24,20 @@ const SignIn = () => {
     e.preventDefault()
     const email = e.target[0].value
     const password = e.target[1].value
-    await axios.post('/api/login', {
-      email,
-      password,
-    })
-    history.push('/dashboard')
+    if (!validator.isEmail(email)) {
+      alert('Please enter a valid email!')
+      return
+    }
+
+    try {
+      await axios.post('/api/login', {
+        email,
+        password,
+      })
+      history.push('/dashboard')
+    } catch (e) {
+      alert('Invalid credentials!')
+    }
   }
 
   return (
