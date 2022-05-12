@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import axios from '../api'
 
@@ -77,6 +77,12 @@ const SignUp = () => {
         <br />
         <br />
         <input type="submit" className="ui button primary" value="Sign Up" />
+        <br />
+        <br />
+        <p>
+          Already have an account?
+          <Link to="/"> Sign In</Link>
+        </p>
       </form>
     </div>
   )
