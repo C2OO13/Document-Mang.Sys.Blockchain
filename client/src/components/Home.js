@@ -8,8 +8,6 @@ const Home = () => {
   const history = useHistory()
   const [dashboard, setDashboard] = useState([])
   const [isApplicant, setIsApplicant] = useState(null)
-  const [fetchedCerti, setFetchedCerti] = useState(null)
-  const [certiType, setCertiType] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
 
@@ -34,21 +32,19 @@ const Home = () => {
   useEffect(() => {
     const checkUserAndGetData = async () => {
       const { data } = await axios.get('/api/is_approver')
-      if (data === false) {
+      if (!data) {
         setIsApplicant(true)
 
         const { data: birthData } = await axios.get(
           '/api/get_birth_certificate'
         )
         const { data: aadharData } = await axios.get('/api/get_aadhar_card')
-        console.log(aadharData)
         const { data: passportData } = await axios.get(
           '/api/get_passport_certificate'
         )
         const { data: sharedCertificates } = await axios.get(
           '/api/get_shared_certis'
         )
-        console.log(sharedCertificates)
         let certis = []
 
         if (aadharData[4] !== '') {
@@ -75,91 +71,175 @@ const Home = () => {
         setDashboard([...dashboard, ...certis])
       } else {
         setIsApplicant(false)
+        const { data: pendingBirthCertis } = await axios.get(
+          '/api/get_all_pending_birth_certificates'
+        )
+        const { data: pendingAadharCertis } = await axios.get(
+          '/api/get_all_pending_aadhar_cards'
+        )
+        const { data: pendingPassportCertis } = await axios.get(
+          '/api/get_all_pending_passport_certificates'
+        )
+        let certis = []
+        for (const pendingBirthCerti of pendingBirthCertis) {
+          if (
+            typeof pendingBirthCerti === 'string' ||
+            pendingBirthCerti[4] === ''
+          ) {
+            continue
+          }
+          certis.push([...pendingBirthCerti, 'birth'])
+        }
+        for (const pendingAadharCerti of pendingAadharCertis) {
+          if (
+            typeof pendingAadharCerti === 'string' ||
+            pendingAadharCerti[4] === ''
+          ) {
+            continue
+          }
+          certis.push([...pendingAadharCerti, 'aadhar'])
+        }
+        for (const pendingPassportCerti of pendingPassportCertis) {
+          if (
+            typeof pendingPassportCerti === 'string' ||
+            pendingPassportCerti[4] === ''
+          ) {
+            continue
+          }
+          certis.push([...pendingPassportCerti, 'passport'])
+        }
+        setDashboard([...dashboard, ...certis])
       }
     }
 
     checkUserAndGetData()
-
-    // const checkAuth = async () => {
-    //   try {
-    //     await axios.get('/api/check_auth')
-    //     setIsAuthenticated(true)
-    //   } catch (e) {
-    //     console.log(e)
-    //     history.push('/')
-    //   }
-    // }
-    // checkAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const approveClick = async () => {
-    if (certiType === 1) await axios.post('/api/approve_birth_certificate')
-    else if (certiType === 2) {
-      await axios.post('/api/approve_aadhar_card')
-    } else {
-      await axios.post('/api/approve_passport_certificate')
-    }
-  }
-
-  const rejectClick = async () => {
-    if (certiType === 1) await axios.post('/api/reject_birth_certicate')
-    else if (certiType === 2) {
-      await axios.post('/api/reject_aadhar_card')
-    } else {
-      await axios.post('/api/reject_passport_certicate')
-    }
-  }
-
-  const updateCerti = (data) => {
-    setFetchedCerti(
-      <>
-        <a href={data[2]} target="_blank" rel="noreferrer">
-          <button className="ui button primary">View</button>
-        </a>
-        <button className="ui button primary" onClick={approveClick}>
-          Approve
-        </button>
-        <button className="negative ui button" onClick={rejectClick}>
-          Reject
-        </button>
-      </>
-    )
-  }
-
-  const handleBirthClick = async () => {
-    const { data } = await axios.get('/api/top_birth_certificate')
-    setCertiType(1)
-    updateCerti(data)
-  }
-
-  const handleAadharClick = async () => {
-    const { data } = await axios.get('/api/top_aadhar_certi')
-    setCertiType(2)
-    updateCerti(data)
-  }
-
-  const handlePassportClick = async () => {
-    const { data } = await axios.get('/api/top_passport_certificate')
-    setCertiType(3)
-    updateCerti(data)
-  }
-
   const ApproverDashboard = () => {
+    console.log(dashboard)
     return (
-      <>
-        <h1>Click below buttons to find pending approval requests!</h1>
-        <button className="ui primary button" onClick={handleBirthClick}>
-          Birth Certificate
-        </button>
-        <button className="ui primary button" onClick={handleAadharClick}>
-          Aadhar Certificate
-        </button>
-        <button className="ui primary button" onClick={handlePassportClick}>
-          Passport Certificate
-        </button>
-        {fetchedCerti}
-      </>
+      <div className="ui styled accordion" style={{ width: '100%' }}>
+        {dashboard.map((certificate, index) => {
+          const active = index === activeIndex ? 'active' : ''
+
+          return (
+            <React.Fragment key={certificate[2]}>
+              <div
+                onClick={() => onTitleClick(index)}
+                className={`title ${active}`}
+              >
+                <i className="dropdown icon"></i>
+                {certificate[6] === 'birth'
+                  ? 'Birth Certificate'
+                  : certificate[6] === 'aadhar'
+                  ? 'Aadhar Certificate'
+                  : 'Passport Certificate'}
+                {` (by ${certificate[4]})`}
+              </div>
+              <div className={`content ${active}`}>
+                <a href={`${certificate[2]}`} target="_blank" rel="noreferrer">
+                  <button className="ui button primary">View</button>
+                </a>
+                <button
+                  className="ui button primary"
+                  onClick={async () => {
+                    if (certificate[6] === 'birth') {
+                      const { data } = await axios.post(
+                        '/api/approve_birth_certificate',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Approved successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    } else if (certificate[6] === 'aadhar') {
+                      const { data } = await axios.post(
+                        '/api/approve_aadhar_card',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Approved successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    } else {
+                      const { data } = await axios.post(
+                        '/api/approve_passport_certificate',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Approved successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    }
+                  }}
+                >
+                  Approve
+                </button>
+                <button
+                  className="ui button negative"
+                  onClick={async () => {
+                    if (certificate[6] === 'birth') {
+                      const { data } = await axios.post(
+                        '/api/reject_birth_certificate',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Rejected successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    } else if (certificate[6] === 'aadhar') {
+                      const { data } = await axios.post(
+                        '/api/reject_aadhar_card',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Rejected successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    } else {
+                      const { data } = await axios.post(
+                        '/api/reject_passport_certificate',
+                        {
+                          email: certificate[4],
+                        }
+                      )
+                      if (data) {
+                        alert('Rejected successfully!')
+                        window.location.reload()
+                      } else {
+                        alert('Something went wrong!')
+                      }
+                    }
+                  }}
+                >
+                  Reject
+                </button>
+              </div>
+            </React.Fragment>
+          )
+        })}
+      </div>
     )
   }
 
@@ -247,6 +327,24 @@ const Home = () => {
   )
 
   if (!isAuthenticated) return null
+
+  if (!dashboard.length) {
+    if (isApplicant) {
+      return (
+        <>
+          <Header />
+          <h1>No Certificates yet! Try creating one:)</h1>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Header />
+          <h1>No Certificates to verify yet! Hold On:)</h1>
+        </>
+      )
+    }
+  }
 
   return (
     <>

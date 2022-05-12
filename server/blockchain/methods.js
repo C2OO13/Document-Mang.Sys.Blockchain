@@ -51,11 +51,10 @@ export const newBirthCertificate = async (req, res) => {
   try {
     req.body.email = req.user.email
     var data = req.body
-    console.log('Here1')
+
     await birthCreate(data)
-    console.log('Here')
+
     const link = await getIpfsLink(`${data.email}_birth`)
-    console.log(link)
     await MainContract.methods
       .newBirthCerti(
         req.body.email,
@@ -68,7 +67,6 @@ export const newBirthCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(JSON.stringify(false))
   }
 }
@@ -91,35 +89,30 @@ export const setBirthCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
 
 export const approveBirthCertificate = async (req, res) => {
   try {
-    req.body.email = req.user.email
     await MainContract.methods
       .approveBirthCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
 
 export const rejectBirthCertificate = async (req, res) => {
   try {
-    req.body.email = req.user.email
     await MainContract.methods
       .rejectBirthCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -132,7 +125,6 @@ export const getTopBirthCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -144,11 +136,8 @@ export const getBirthCertificate = async (req, res) => {
       .getBirthCertificate(req.body.email)
       .call()
 
-    console.log(data)
-
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -161,7 +150,6 @@ export const getCountPendingBirthCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -174,8 +162,7 @@ export const getAllPendingBirthCertificates = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
-    return res.send(error.message)
+    return res.send(JSON.stringify([]))
   }
 }
 
@@ -197,7 +184,6 @@ export const newAadharCard = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -220,21 +206,18 @@ export const setAadharCard = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
 
 export const approveAadharCard = async (req, res) => {
   try {
-    req.body.email = req.user.email
     await MainContract.methods
       .approveAadharCard(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -245,21 +228,18 @@ export const getTopAadharCerti = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
 
 export const rejectAadharCard = async (req, res) => {
   try {
-    req.body.email = req.user.email
     await MainContract.methods
       .rejectAadharCard(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -271,7 +251,6 @@ export const getAadharCard = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -282,7 +261,6 @@ export const getCountPendingAadharCard = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -293,8 +271,7 @@ export const getAllPendingAadharCards = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
-    return res.send(error.message)
+    return res.send(JSON.stringify([]))
   }
 }
 
@@ -313,7 +290,6 @@ export const shareCerti = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -360,7 +336,6 @@ export const getSharedCertis = async (req, res) => {
 
     return res.send(JSON.stringify(modified_data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -383,7 +358,6 @@ export const newPassportCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -406,21 +380,18 @@ export const setPassportCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
 
 export const approvePassportCertificate = async (req, res) => {
   try {
-    req.body.email = req.user.email
     await MainContract.methods
       .approvePassportCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -431,7 +402,6 @@ export const getTopPassportCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -439,12 +409,11 @@ export const getTopPassportCertificate = async (req, res) => {
 export const rejectPassportCertificate = async (req, res) => {
   try {
     await MainContract.methods
-      .rejectPassportCertificate(req.body.acc)
+      .rejectPassportCertificate(req.body.email)
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -458,7 +427,6 @@ export const getPassportCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -471,32 +439,26 @@ export const getCountPendingPassportCertificate = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
 
 export const getAllPendingPassportCertificates = async (req, res) => {
   try {
-    const data = await MainContract.methods
-      .getAllPendingPassportCertificates()
-      .call()
+    const data = await MainContract.methods.getAllPendingPassportCertis().call()
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
-    return res.send(error.message)
+    return res.send(JSON.stringify([]))
   }
 }
 
 export const getOwner = async (req, res) => {
-  console.log('Request owner received!')
   try {
     const data = await MainContract.methods.owner().call()
-    // console.log(data);
+    // ;
     res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     // res.send(error.message);
   }
 }
@@ -509,10 +471,9 @@ export const getUserByEmail = async (email) => {
 export const getUser = async (req, res) => {
   try {
     const data = await MainContract.methods.getUser(req.body.accName).call()
-    // console.log(data);
+    // ;
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -520,10 +481,9 @@ export const getUser = async (req, res) => {
 export const getApprovers = async (req, res) => {
   try {
     const data = await MainContract.methods.getApprovers().call()
-    // console.log(data);
+    // ;
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -531,10 +491,9 @@ export const getApprovers = async (req, res) => {
 export const getAdmins = async (req, res) => {
   try {
     const data = await MainContract.methods.getAdmins().call()
-    // console.log(data);
+    // ;
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -542,10 +501,9 @@ export const getAdmins = async (req, res) => {
 export const getId = async (req, res) => {
   try {
     const data = await MainContract.methods.getId(req.body.accName).call()
-    // console.log(data);
+    // ;
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -553,10 +511,9 @@ export const getId = async (req, res) => {
 export const isAdmin = async (req, res) => {
   try {
     const data = await MainContract.methods.isAdmin(req.body.accName).call()
-    // console.log(data);
+    // ;
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -567,7 +524,6 @@ export const isApprover = async (req, res) => {
     const data = await MainContract.methods.isApprover(req.body.accName).call()
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -580,20 +536,17 @@ export const isApplicant = async (req, res) => {
     else data = false
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
 
 export const login = async (req, res) => {
   try {
-    console.log('=====================================', req.body)
     const data = await MainContract.methods
       .login(req.body.accName, req.body.password)
       .call()
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     res.send(error.message)
   }
 }
@@ -603,7 +556,7 @@ export const signupUser = async (accName, name, password) => {
     await MainContract.methods
       .registerApplicant(accName, name, password)
       .send({ from: address, gas: '300000' })
-    // console.log(data)
+    //
     return true
   } catch (error) {
     return false
@@ -611,15 +564,13 @@ export const signupUser = async (accName, name, password) => {
 }
 
 export const registerApplicant = async (req, res) => {
-  console.log('register applicant')
   try {
     await MainContract.methods
       .registerApplicant(req.body.email, req.body.name, req.body.password)
       .send({ from: address, gas: '300000' })
-    // console.log(data)
+    //
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -638,7 +589,6 @@ export const registerApprover = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -651,7 +601,6 @@ export const registerAdmin = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -664,7 +613,6 @@ export const changePassword = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -681,7 +629,6 @@ export const addNotification = async (req, res) => {
 
     return res.send(JSON.stringify(true))
   } catch (error) {
-    console.log(error)
     return res.send(false)
   }
 }
@@ -694,7 +641,6 @@ export const getUserNotifications = async (req, res) => {
 
     return res.send(JSON.stringify(data))
   } catch (error) {
-    console.log(error)
     return res.send(error.message)
   }
 }
@@ -713,7 +659,7 @@ export const newCertificate = async (acc, hash, desc) => {
 
         return JSON.stringify(id);
     } catch (error) {
-        console.log(error);
+        ;
         return res.send(error.message);
     }
 }
@@ -728,7 +674,7 @@ export const getCertificate = async (id) => {
         return res.send(JSON.stringify(data));
 
     } catch (error) {
-        console.log(error);
+        ;
         return res.send(error.message);
     }
 }
@@ -742,7 +688,7 @@ export const setCertificate = async (id, acc, hash, desc) => {
 
         return JSON.stringify('Success');
     } catch (error) {
-        console.log(error);
+        ;
         return res.send(error.message);
     }
 }
@@ -754,7 +700,7 @@ export const setActive = async (id, state) => {
             .send({ from: address, gas: "300000" });
         return JSON.stringify('Success');
     } catch (error) {
-        console.log(error);
+        ;
         return res.send(error.message);
     }
 }

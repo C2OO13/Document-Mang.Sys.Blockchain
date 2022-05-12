@@ -97,7 +97,7 @@ router.get(
   getCountPendingBirthCertificate
 )
 router.get(
-  '/api/get_all_shared_birth_certificates',
+  '/api/get_all_pending_birth_certificates',
   passportJWT,
   getAllPendingBirthCertificates
 )
