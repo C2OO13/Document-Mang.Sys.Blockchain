@@ -153,7 +153,7 @@ router.get(
   getAllPendingPassportCertificates
 )
 
-router.get('/api/add_notification', passportJWT, addNotification)
+router.post('/api/add_notification', passportJWT, addNotification)
 router.get('/api/get_user_notifications', passportJWT, getUserNotifications)
 
 export default router

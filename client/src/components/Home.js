@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react'
 
 import axios from '../api'
 import Header from './Header'
 
 const Home = () => {
   const history = useHistory()
+  const [dataFetched, setDataFetched] = useState(false)
   const [dashboard, setDashboard] = useState([])
   const [isApplicant, setIsApplicant] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -45,6 +47,7 @@ const Home = () => {
         const { data: sharedCertificates } = await axios.get(
           '/api/get_shared_certis'
         )
+
         let certis = []
 
         if (aadharData[4] !== '') {
@@ -69,6 +72,7 @@ const Home = () => {
           }
         })
         setDashboard([...dashboard, ...certis])
+        setDataFetched(true)
       } else {
         setIsApplicant(false)
         const { data: pendingBirthCertis } = await axios.get(
@@ -109,12 +113,22 @@ const Home = () => {
           certis.push([...pendingPassportCerti, 'passport'])
         }
         setDashboard([...dashboard, ...certis])
+        setDataFetched(true)
       }
     }
 
     checkUserAndGetData()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const createNotification = async (email, message) => {
+    message = message[0].toUpperCase() + message.slice(1)
+    await axios.post('/api/add_notification', {
+      email,
+      message,
+    })
+  }
 
   const ApproverDashboard = () => {
     console.log(dashboard)
@@ -153,6 +167,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Approved successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Approved. View it on Dashboard!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -166,6 +184,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Approved successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Approved. View it on Dashboard!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -179,6 +201,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Approved successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Approved. View it on Dashboard!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -200,6 +226,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Rejected successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Rejected. Request again with correct details!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -213,6 +243,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Rejected successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Rejected. Request again with correct details!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -226,6 +260,10 @@ const Home = () => {
                       )
                       if (data) {
                         alert('Rejected successfully!')
+                        await createNotification(
+                          certificate[4],
+                          `${certificate[6]} certificate is Rejected. Request again with correct details!`
+                        )
                         window.location.reload()
                       } else {
                         alert('Something went wrong!')
@@ -310,6 +348,10 @@ const Home = () => {
                   })
                   if (data) {
                     alert('Shared Successfully!!')
+                    await createNotification(
+                      toShareEmail,
+                      `${certificate[6]} certificate is shared with you by ${certificate[4]}`
+                    )
                   } else {
                     alert('Something went wrong!!')
                   }
@@ -325,6 +367,21 @@ const Home = () => {
   ) : (
     ApproverDashboard()
   )
+
+  if (!dataFetched) {
+    return (
+      <>
+        <Header />
+        <Segment style={{ marginTop: '100px' }}>
+          <Dimmer active inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
+
+          <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
+        </Segment>
+      </>
+    )
+  }
 
   if (!isAuthenticated) return null
 

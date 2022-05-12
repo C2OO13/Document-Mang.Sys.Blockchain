@@ -620,11 +620,7 @@ export const changePassword = async (req, res) => {
 export const addNotification = async (req, res) => {
   try {
     await MainContract.methods
-      .addNotification(
-        req.body.accName,
-        req.body.message,
-        req.body.redirectLink
-      )
+      .addNotification(req.body.email, req.body.message, '')
       .send({ from: address, gas: '300000' })
 
     return res.send(JSON.stringify(true))
@@ -635,8 +631,9 @@ export const addNotification = async (req, res) => {
 
 export const getUserNotifications = async (req, res) => {
   try {
+    req.body.email = req.user.email
     const data = await MainContract.methods
-      .getUserNotifications(req.body.accountName)
+      .getUserNotifications(req.body.email)
       .call()
 
     return res.send(JSON.stringify(data))

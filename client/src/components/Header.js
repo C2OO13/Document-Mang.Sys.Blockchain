@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import axios from '../api'
+import Notifications from './Notifications'
 
 const Header = () => {
   const [isApplicant, setIsApplicant] = useState(null)
@@ -29,9 +30,10 @@ const Header = () => {
   return (
     <div className="ui secondary pointing menu">
       <Link to="/dashboard" className="item">
-        BBDMS
+        Dashboard
       </Link>
       <div className="right menu">
+        <Notifications />
         {isApplicant ? (
           <Link to="/create_certificate" className="item">
             Create Certificate
