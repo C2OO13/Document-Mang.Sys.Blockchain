@@ -3,7 +3,7 @@ import { Strategy } from 'passport-jwt'
 
 import { getUserByEmail } from '../../blockchain/methods.js'
 
-console.log('Logs')
+// console.log('Logs')
 
 passport.use(
   'jwt',
@@ -17,7 +17,7 @@ passport.use(
       secretOrKey: process.env.JWT_TOKEN_SECRET,
     },
     async (payload, done) => {
-      console.log('aksjcn')
+      // console.log('aksjcn')
       try {
         const user = await getUserByEmail(payload.email)
         if (user) {

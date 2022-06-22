@@ -3,28 +3,27 @@ import path from 'path'
 import { PDFDocument } from 'pdf-lib'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import axios from 'axios'
+// import axios from 'axios'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const uploadDir = path.join(__dirname, '../pdf_file')
+const template = path.join(__dirname, '../pdfHelpers/birthTemplate.pdf')
 
 export const birthCreate = async (data) => {
   // Fetch the PDF with form fields
-  console.log('Here32')
-  const formUrl =
-    'https://ipfs.io/ipfs/QmdqmPxb1g4hoKJijNpb4hm5zPtx8enuQTGq12wBHx6dEz' //Path of Form to Fill
+  // const formUrl =
+  //   'https://ipfs.io/ipfs/QmdqmPxb1g4hoKJijNpb4hm5zPtx8enuQTGq12wBHx6dEz' //Path of Form to Fill
 
-  const formPdfBytes = await axios.get(formUrl, {
-    responseType: 'arraybuffer',
-  })
-  console.log('Here33')
+  
+  const formPdfBytes = fs.readFileSync(template)
+
   // Load a PDF with form fields
-  const pdfDoc = await PDFDocument.load(formPdfBytes.data)
-
+  const pdfDoc = await PDFDocument.load(formPdfBytes)
+  
   // Get the form containing all the fields
   const form = pdfDoc.getForm()
-
+  
   // Get all fields in the PDF by their names
   const childName = form.getTextField('child_name')
   const guardianName = form.getTextField('guardian_name')
@@ -50,24 +49,11 @@ export const birthCreate = async (data) => {
   // Serialize the PDFDocument to bytes (a Uint8Array)
   const pdfBytes = await pdfDoc.save()
   // console.log(pdfBytes);// answer below
-  // Uint8Array(70271) [
-  //    37,  80,  68, 70,  45,  49,  46,  55,  10,  37, 129, 129,
-  //    129, 129,  10, 10,  54,  32,  48,  32, 111,  98, 106,  10,
-  //     60,  60,  10, 47,  84, 121, 112, 101,  32,  47,  88,  79,
-  //     98, 106, 101, 99, 116,  10,  47,  83, 117,  98, 116, 121,
-  //    112, 101,  32, 47,  73, 109,  97, 103, 101,  10,  47,  66,
-  //    105, 116, 115, 80, 101, 114,  67, 111, 109, 112, 111, 110,
-  //    101, 110, 116, 32,  56,  10,  47,  87, 105, 100, 116, 104,
-  //     32,  53,  49, 50,  10,  47,  72, 101, 105, 103, 104, 116,
-  //     32,  53,  49, 50,
-  //    ... 70171 more items
-  //  ]
-
+  
   // Trigger the browser to download the PDF document
   // download(pdfBytes, "pdf-lib_form_creation_example.pdf", "application/pdf");
   fs.writeFileSync(
     path.join(uploadDir, `${data.email}_birth.pdf`),
     pdfBytes
-    // req.file.buffer
   )
 }

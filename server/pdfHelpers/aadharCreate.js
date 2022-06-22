@@ -3,23 +3,23 @@ import path from 'path'
 import { PDFDocument } from 'pdf-lib'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import axios from 'axios'
+// import axios from 'axios'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const uploadDir = path.join(__dirname, '../pdf_file')
+const template = path.join(__dirname, '../pdfHelpers/aadharTemplate.pdf')
 
 export const aadharCreate = async (data) => {
   // Fetch the PDF with form fields
-  const formUrl =
-    'https://ipfs.io/ipfs/QmVfydetmBLamwik4bHjMQKWZQBaCVzm1zGssuN4SfoDqa' //Path of Form to Fill
-  const formPdfBytes = await axios.get(formUrl, {
-    responseType: 'arraybuffer',
-  })
+  // const formUrl =
+  //   'https://ipfs.io/ipfs/QmVfydetmBLamwik4bHjMQKWZQBaCVzm1zGssuN4SfoDqa' //Path of Form to Fill
+  
+  const formPdfBytes = fs.readFileSync(template)
 
   // Load a PDF with form fields
-  const pdfDoc = await PDFDocument.load(formPdfBytes.data)
-
+  const pdfDoc = await PDFDocument.load(formPdfBytes)
+    
   // Get the form containing all the fields
   const form = pdfDoc.getForm()
 

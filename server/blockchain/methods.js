@@ -50,10 +50,10 @@ export const newBirthCertificate = async (req, res) => {
   try {
     req.body.email = req.user.email
     var data = req.body
-
     await birthCreate(data)
 
     const link = await getIpfsLink(`${data.email}_birth`)
+    console.log(link)
     await MainContract.methods
       .newBirthCerti(
         req.body.email,
